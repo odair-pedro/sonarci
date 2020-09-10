@@ -1,2 +1,2 @@
 # SonarQube Fast
-A simple tool to help you integrate SonarQube inspections with your CI
+A simple CLI for help you integrate SonarQube inspections with your CI pipelines.
