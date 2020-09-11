@@ -6,7 +6,7 @@ import (
 
 var rootCmd = &cobra.Command{
 	Use:   "sonarqubeci",
-	Short: "A tool for SonarQube integration",
+	Short: "A simple tool for SonarQube integration",
 	Long:  "SonarQubeFast is a CLI library for help you integrate and use SonarQube inspections.",
 }
 
@@ -15,9 +15,13 @@ func Execute() error {
 }
 
 func init() {
-	//log.Print("init was called")
+	rootCmd.PersistentFlags().StringP("username", "u", "", "Username and password or a Token for authentication")
+	rootCmd.PersistentFlags().StringP("server", "s", "", "SonarQube server address")
+	rootCmd.PersistentFlags().StringP("project", "p", "", "SonarQube project key")
 
-	rootCmd.PersistentFlags().StringP("username", "u", "", "Test usage")
+	rootCmd.MarkPersistentFlagRequired("server")
+	rootCmd.MarkPersistentFlagRequired("project")
 
 	rootCmd.AddCommand(qualityGateCmd)
+	rootCmd.AddCommand(searchCmd)
 }
