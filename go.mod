@@ -1,4 +1,4 @@
-module sonarqubeci
+module sonarci
 
 go 1.14
 

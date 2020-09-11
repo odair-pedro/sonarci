@@ -3,7 +3,7 @@ package main
 import (
 	"log"
 	"os"
-	"sonarqubeci/cmd"
+	"sonarci/cmd"
 )
 
 func main() {
