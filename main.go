@@ -2,13 +2,17 @@ package main
 
 import (
 	"log"
-	"os"
 	"sonarci/cmd"
+	"sonarci/logging"
 )
 
 func main() {
+	logging.Setup()
+	startRootCommand()
+}
+
+func startRootCommand() {
 	if err := cmd.Execute(); err != nil {
-		log.Fatal(err.Error())
-		os.Exit(1)
+		log.Fatalln(err.Error())
 	}
 }
