@@ -10,7 +10,7 @@ const route = "/api/projects/search?projects="
 
 func (api restApi) SearchProjects(projects string) (<-chan abstract.Project, error) {
 	conn := http.NewConnection(api.server, api.token, api.timeout)
-	chBuff, chErr := conn.DoGetWithChannels(route + projects)
+	chBuff, chErr := conn.DoGet(route + projects)
 	err := <-chErr
 	if err != nil {
 		return nil, err

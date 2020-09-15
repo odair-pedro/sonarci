@@ -62,7 +62,7 @@ func NewConnection(server string, token string, timeout time.Duration) *Connecti
 //	log.Println("end return channel DoGet")
 //}
 
-func (connection *Connection) DoGetWithChannels(route string) (<-chan []byte, <-chan error) {
+func (connection *Connection) DoGet(route string) (<-chan []byte, <-chan error) {
 	chOut := make(chan []byte, 1)
 	chErr := make(chan error, 1)
 
