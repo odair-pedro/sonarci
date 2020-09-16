@@ -37,8 +37,6 @@ Use "sonarqubeci [command] --help" for more information about a command.
 ## Quality Report
 ![Status](https://img.shields.io/badge/Status-Failed-Red?style=for-the-badge)
 
----
-
 [![Status](https://img.shields.io/badge/B-Security%20rating%20on%20New%20Code-red?style=for-the-badge)](https://www.google.com)
 [![Status](https://img.shields.io/badge/22.5%25-coverage%20on%20new%20code-red?style=for-the-badge)](https://www.google.com)
 [![Status](https://img.shields.io/badge/22.1%25-coverage-red?style=for-the-badge)](https://www.google.com)
