@@ -6,11 +6,11 @@ import (
 	"sonarci/sonar/abstract"
 )
 
-const route = "/api/projects/search?projects="
+const routeSearchProjects = "/api/projects/search?projects="
 
 func (api restApi) SearchProjects(projects string) (<-chan abstract.Project, error) {
 	conn := http.NewConnection(api.server, api.token, api.timeout)
-	chBuff, chErr := conn.DoGet(route + projects)
+	chBuff, chErr := conn.DoGet(routeSearchProjects + projects)
 	err := <-chErr
 	if err != nil {
 		return nil, err

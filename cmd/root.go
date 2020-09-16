@@ -32,4 +32,5 @@ func init() {
 	_ = rootCmd.MarkPersistentFlagRequired(flagToken)
 
 	rootCmd.AddCommand(searchCmd)
+	rootCmd.AddCommand(versionCmd)
 }

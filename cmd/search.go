@@ -4,7 +4,7 @@ import (
 	"github.com/spf13/cobra"
 	"log"
 	"sonarci/sonar"
-	"time"
+	"strings"
 )
 
 const (
@@ -30,33 +30,28 @@ func search(cmd *cobra.Command, args []string) {
 		return
 	}
 
-	persistentFlags := cmd.Parent().PersistentFlags()
-	server, _ := persistentFlags.GetString(flagServer)
-	if !validateFlag(flagToken, server) {
+	pFlags := getPersistentFlagsFromCmd(cmd)
+	if pFlags == nil {
 		return
 	}
 
-	token, _ := persistentFlags.GetString(flagToken)
-	if !validateFlag(flagToken, token) {
-		return
-	}
-
-	timeout, _ := persistentFlags.GetInt(flagTimout)
-	if timeout == 0 {
-		timeout = timeoutDefault
-	}
-
-	api := sonar.NewApi(server, token, time.Duration(timeout)*time.Millisecond)
+	api := sonar.NewApi(pFlags.Server, pFlags.Token, pFlags.Timeout)
 	results, err := api.SearchProjects(projects)
 	if err != nil {
 		log.Fatalln("Failure to search projects: ", err)
 	}
 
+	const colSize = 30
+	log.Printf("%s | %s | %s | %s | %s", padRight("project-id ", "-", colSize),
+		padRight("project-name ", "-", colSize), padRight("project-key ", "-", colSize),
+		padRight("organization ", "-", colSize), padRight("visibility ", "-", colSize))
+
 	for r := range results {
-		log.Println("\nProject Id   : ", r.Id)
-		log.Println("Project Name : ", r.Name)
-		log.Println("Project Key  : ", r.Key)
-		log.Println("Organization : ", r.Organization)
-		log.Println("Visibility   : ", r.Visibility)
+		log.Printf("%s | %s | %s | %s | %s", padRight(r.Id, " ", colSize), padRight(r.Name, " ", colSize),
+			padRight(r.Key, " ", colSize), padRight(r.Organization, " ", colSize), padRight(r.Visibility, " ", colSize))
 	}
+}
+
+func padRight(str string, sufix string, count int) string {
+	return str + strings.Repeat(sufix, count-len(str))
 }
