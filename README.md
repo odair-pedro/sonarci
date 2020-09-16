@@ -32,7 +32,7 @@ Use "sonarqubeci [command] --help" for more information about a command.
 
 ```
 
-# Report
+## Report Example
 
 ## Quality Report
 ![Status](https://img.shields.io/badge/Status-Failed-Red?style=for-the-badge)
