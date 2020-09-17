@@ -6,11 +6,11 @@ A simple CLI for help you integrate SonarQube inspections with your CI pipelines
 [![Open Source Helpers](https://www.codetriage.com/odair-pedro/sonarci/badges/users.svg)](https://www.codetriage.com/odair-pedro/sonarci)
 
 ## Usage
+
 ```
-sonarci --help
+./sonarci --help
 ```
 
-#### Output
 ```
 SonarQubeFast is a CLI library for help you integrate and use SonarQube inspections.
 
@@ -29,6 +29,28 @@ Flags:
   -o, --token string    Authentication Token
 
 Use "sonarqubeci [command] --help" for more information about a command.
+
+```
+
+### Search Command
+```
+./sonarci search --help
+```
+
+```
+Search and retrieve information about the specified SonarQube projects.
+
+Usage:
+  sonarqubeci search [flags]
+
+Flags:
+  -h, --help              help for search
+  -p, --projects string   SonarQube projects key. Eg: my-sonar-project | my-sonar-project-1,my-sonar-project-2
+
+Global Flags:
+  -s, --server string   SonarQube server address
+  -t, --timeout int     Timeout in milliseconds. Default value is 30000 ms
+  -o, --token string    Authentication Token
 
 ```
 
