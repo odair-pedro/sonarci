@@ -2,15 +2,14 @@ package rest
 
 import (
 	"encoding/json"
-	"sonarci/http"
 	"sonarci/sonar/abstract"
 )
 
 const routeSearchProjects = "/api/projects/search?projects="
 
-func (api restApi) SearchProjects(projects string) (<-chan abstract.Project, error) {
-	conn := http.NewConnection(api.server, api.token, api.timeout)
-	chBuff, chErr := conn.DoGet(routeSearchProjects + projects)
+func (api *Api) SearchProjects(projects string) (<-chan abstract.Project, error) {
+	//conn := http.NewConnection(abstract.server, abstract.token, abstract.timeout)
+	chBuff, chErr := api.DoGet(routeSearchProjects + projects)
 	err := <-chErr
 	if err != nil {
 		return nil, err

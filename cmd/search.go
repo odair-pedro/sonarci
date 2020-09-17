@@ -35,7 +35,7 @@ func search(cmd *cobra.Command, args []string) {
 		return
 	}
 
-	api := sonar.NewApi(pFlags.Server, pFlags.Token, pFlags.Timeout)
+	api := sonar.MakeApi(pFlags.Server, pFlags.Token, pFlags.Timeout)
 	results, err := api.SearchProjects(projects)
 	if err != nil {
 		log.Fatalln("Failure to search projects: ", err)

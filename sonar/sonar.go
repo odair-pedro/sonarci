@@ -6,6 +6,6 @@ import (
 	"time"
 )
 
-func NewApi(server string, token string, timeout time.Duration) abstract.Api {
+func MakeApi(server string, token string, timeout time.Duration) abstract.Api {
 	return rest.NewApi(server, token, timeout)
 }

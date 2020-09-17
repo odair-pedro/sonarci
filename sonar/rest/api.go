@@ -1,18 +1,32 @@
 package rest
 
 import (
-	"sonarci/sonar/abstract"
+	"encoding/base64"
+	"fmt"
+	"sonarci/http"
 	"time"
 )
 
-type restApi struct {
-	config
+type Api struct {
+	*http.Connection
 }
 
-func NewApi(server string, token string, timeout time.Duration) abstract.Api {
-	return restApi{config{server: server, token: token, timeout: timeout}}
-}
-
-//func (api restApi) GetServerVersion() (string, error) {
-//	return "1.0.0", nil
+//func (a Api) GetServerVersion() (string, error) {
+//	panic("implement me")
 //}
+//
+//func (a Api) SearchProjects(projects string) (<-chan sonar.Project, error) {
+//	panic("implement me")
+//}
+//
+//func (a Api) ValidateBranch(project string, branch string) (bool, error) {
+//	panic("implement me")
+//}
+
+func NewApi(server string, token string, timeout time.Duration) *Api {
+	return &Api{http.NewConnection(server, getAuthentication(token), timeout)}
+}
+
+func getAuthentication(token string) string {
+	return base64.StdEncoding.EncodeToString([]byte(fmt.Sprintf("%s:", token)))
+}

@@ -21,7 +21,7 @@ func version(cmd *cobra.Command, args []string) {
 		return
 	}
 
-	api := sonar.NewApi(pFlags.Server, pFlags.Token, pFlags.Timeout)
+	api := sonar.MakeApi(pFlags.Server, pFlags.Token, pFlags.Timeout)
 	version, err := api.GetServerVersion()
 	if err != nil {
 		log.Fatalln("Failure to get server version: ", err)
