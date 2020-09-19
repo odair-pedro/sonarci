@@ -8,7 +8,6 @@ import (
 const routeSearchProjects = "/api/projects/search?projects="
 
 func (api *Api) SearchProjects(projects string) (<-chan abstract.Project, error) {
-	//conn := http.NewConnection(abstract.server, abstract.token, abstract.timeout)
 	chBuff, chErr := api.DoGet(routeSearchProjects + projects)
 	err := <-chErr
 	if err != nil {
