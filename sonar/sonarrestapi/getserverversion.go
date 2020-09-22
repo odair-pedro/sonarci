@@ -1,9 +1,9 @@
-package rest
+package sonarrestapi
 
 const routeGetServerVersion = "/api/server/version"
 
-func (api *Api) GetServerVersion() (string, error) {
-	chBuff, chErr := api.DoGet(routeGetServerVersion)
+func (restApi *restApi) GetServerVersion() (string, error) {
+	chBuff, chErr := restApi.DoGet(routeGetServerVersion)
 	err := <-chErr
 	if err != nil {
 		return "", err

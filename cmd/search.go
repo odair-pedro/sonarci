@@ -3,7 +3,7 @@ package cmd
 import (
 	"github.com/spf13/cobra"
 	"log"
-	"sonarci/sonar"
+	"sonarci/sonar/sonarrestapi"
 	"strings"
 )
 
@@ -35,7 +35,7 @@ func search(cmd *cobra.Command, args []string) {
 		return
 	}
 
-	api := sonar.MakeApi(pFlags.Server, pFlags.Token, pFlags.Timeout)
+	api := sonarrestapi.NewApi(pFlags.Server, pFlags.Token, pFlags.Timeout)
 	results, err := api.SearchProjects(projects)
 	if err != nil {
 		log.Fatalln("Failure to search projects: ", err)

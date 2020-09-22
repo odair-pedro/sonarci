@@ -1,4 +1,4 @@
-package rest
+package sonarrestapi
 
 import (
 	"testing"

@@ -1,4 +1,4 @@
-package abstract
+package sonar
 
 type Project struct {
 	Id           string
@@ -11,5 +11,5 @@ type Project struct {
 type Api interface {
 	GetServerVersion() (string, error)
 	SearchProjects(projects string) (<-chan Project, error)
-	ValidateBranch(project string, branch string) (bool, error)
+	ValidateBranch(project string, branch string) error
 }

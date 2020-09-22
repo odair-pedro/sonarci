@@ -1,14 +1,14 @@
-package rest
+package sonarrestapi
 
 import (
 	"encoding/json"
-	"sonarci/sonar/abstract"
+	"sonarci/sonar"
 )
 
 const routeSearchProjects = "/api/projects/search?projects="
 
-func (api *Api) SearchProjects(projects string) (<-chan abstract.Project, error) {
-	chBuff, chErr := api.DoGet(routeSearchProjects + projects)
+func (restApi *restApi) SearchProjects(projects string) (<-chan sonar.Project, error) {
+	chBuff, chErr := restApi.DoGet(routeSearchProjects + projects)
 	err := <-chErr
 	if err != nil {
 		return nil, err
@@ -21,11 +21,11 @@ func (api *Api) SearchProjects(projects string) (<-chan abstract.Project, error)
 		return nil, err
 	}
 
-	chOut := make(chan abstract.Project, len(resp.Components))
+	chOut := make(chan sonar.Project, len(resp.Components))
 	go func() {
 		defer close(chOut)
 		for _, comp := range resp.Components {
-			chOut <- abstract.Project{
+			chOut <- sonar.Project{
 				Id:           comp.Id,
 				Organization: comp.Organization,
 				Key:          comp.Key,
