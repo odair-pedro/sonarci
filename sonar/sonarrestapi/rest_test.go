@@ -1,8 +1,37 @@
 package sonarrestapi
 
 import (
+	"encoding/base64"
+	"fmt"
 	"testing"
+	"time"
 )
+
+type mockConnection struct {
+	doGet func(route string) (<-chan []byte, <-chan error)
+}
+
+func (connection *mockConnection) DoGet(route string) (<-chan []byte, <-chan error) {
+	return connection.doGet(route)
+}
+
+func TestNewApi(t *testing.T) {
+	const server = "server"
+	const token = "token"
+	timeout := time.Duration(1)
+
+	if got := NewApi(server, token, timeout); got == nil {
+		t.Errorf("getAuthentication() = nil")
+	}
+}
+
+func Test_getAuthentication(t *testing.T) {
+	const token = "123456789"
+	want := base64.StdEncoding.EncodeToString([]byte(fmt.Sprintf("%s:", token)))
+	if got := getAuthentication(token); got != want {
+		t.Errorf("getAuthentication() = %v, want %v", got, want)
+	}
+}
 
 func Test_escapeValue(t *testing.T) {
 	type args struct {
