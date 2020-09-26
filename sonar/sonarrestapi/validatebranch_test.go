@@ -13,7 +13,7 @@ func Test_restApi_validateBranchStatus_checkError(t *testing.T) {
 		Server     string
 	}
 	type args struct {
-		status *branchStatus
+		status branchStatus
 	}
 	tests := []struct {
 		name    string
@@ -24,25 +24,25 @@ func Test_restApi_validateBranchStatus_checkError(t *testing.T) {
 		{
 			name:    "measures-nil",
 			fields:  fields{&mockConnection{}, "http://server"},
-			args:    args{status: &branchStatus{Measures: nil, Branch: "branch", Project: "project"}},
+			args:    args{status: branchStatus{Measures: nil, Branch: "branch", Project: "project"}},
 			wantErr: true,
 		},
 		{
 			name:    "measures-empty",
 			fields:  fields{&mockConnection{}, "http://server"},
-			args:    args{status: &branchStatus{Measures: nil, Branch: "branch", Project: "project"}},
+			args:    args{status: branchStatus{Measures: nil, Branch: "branch", Project: "project"}},
 			wantErr: true,
 		},
 		{
 			name:    "measures-error",
 			fields:  fields{&mockConnection{}, "http://server"},
-			args:    args{status: &branchStatus{Measures: []branchStatusMeasure{{Value: "ERROR"}, {Value: "OK"}}, Branch: "branch", Project: "project"}},
+			args:    args{status: branchStatus{Measures: []branchStatusMeasure{{Value: "ERROR"}, {Value: "OK"}}, Branch: "branch", Project: "project"}},
 			wantErr: true,
 		},
 		{
 			name:    "measures-ok",
 			fields:  fields{&mockConnection{}, "http://server"},
-			args:    args{status: &branchStatus{Measures: []branchStatusMeasure{{Value: "OK"}, {Value: "ERROR"}}, Branch: "branch", Project: "project"}},
+			args:    args{status: branchStatus{Measures: []branchStatusMeasure{{Value: "OK"}, {Value: "ERROR"}}, Branch: "branch", Project: "project"}},
 			wantErr: false,
 		},
 	}
@@ -65,7 +65,7 @@ func Test_restApi_validateBranchStatus_checkErrorMessage(t *testing.T) {
 		Server     string
 	}
 	type args struct {
-		status *branchStatus
+		status branchStatus
 	}
 	tests := []struct {
 		name       string
@@ -76,25 +76,25 @@ func Test_restApi_validateBranchStatus_checkErrorMessage(t *testing.T) {
 		{
 			name:       "measures-nil",
 			fields:     fields{&mockConnection{}, "http://server"},
-			args:       args{status: &branchStatus{Measures: nil, Branch: "branch", Project: "project"}},
+			args:       args{status: branchStatus{Measures: nil, Branch: "branch", Project: "project"}},
 			wantErrMsg: "Failure on validate quality gate results\nFor more detail, visit: http://server/dashboard?branch=branch&id=project",
 		},
 		{
 			name:       "measures-empty",
 			fields:     fields{&mockConnection{}, "http://server"},
-			args:       args{status: &branchStatus{Measures: nil, Branch: "branch", Project: "project"}},
+			args:       args{status: branchStatus{Measures: nil, Branch: "branch", Project: "project"}},
 			wantErrMsg: "Failure on validate quality gate results\nFor more detail, visit: http://server/dashboard?branch=branch&id=project",
 		},
 		{
 			name:       "measures-error",
 			fields:     fields{&mockConnection{}, "http://server"},
-			args:       args{status: &branchStatus{Measures: []branchStatusMeasure{{Value: "ERROR"}, {Value: "OK"}}, Branch: "branch-name", Project: "project"}},
+			args:       args{status: branchStatus{Measures: []branchStatusMeasure{{Value: "ERROR"}, {Value: "OK"}}, Branch: "branch-name", Project: "project"}},
 			wantErrMsg: "Branch branch-name has not been passed on quality gate\nFor more detail, visit: http://server/dashboard?branch=branch-name&id=project",
 		},
 		{
 			name:       "measures-ok",
 			fields:     fields{&mockConnection{}, "http://server"},
-			args:       args{status: &branchStatus{Measures: []branchStatusMeasure{{Value: "OK"}, {Value: "ERROR"}}, Branch: "branch", Project: "project"}},
+			args:       args{status: branchStatus{Measures: []branchStatusMeasure{{Value: "OK"}, {Value: "ERROR"}}, Branch: "branch", Project: "project"}},
 			wantErrMsg: "anything",
 		},
 	}
@@ -113,7 +113,7 @@ func Test_restApi_validateBranchStatus_checkErrorMessage(t *testing.T) {
 
 func Test_restApi_ValidateBranch(t *testing.T) {
 	mockOk := &mockConnection{doGet: func(route string) (<-chan []byte, <-chan error) {
-		bStatus := &branchStatus{Measures: []branchStatusMeasure{{Value: "OK"}}, Branch: "branch-name", Project: "project"}
+		bStatus := branchStatusWrapper{Component: branchStatus{Measures: []branchStatusMeasure{{Value: "OK"}}, Branch: "branch-name", Project: "project"}}
 		buff, _ := json.Marshal(bStatus)
 
 		chOk := make(chan []byte, 1)

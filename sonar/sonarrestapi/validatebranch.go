@@ -18,16 +18,17 @@ func (restApi *restApi) ValidateBranch(project string, branch string) error {
 	}
 
 	buff := <-chBuff
-	branchSt := &branchStatus{}
-	err = json.Unmarshal(buff, branchSt)
+	wrapper := &branchStatusWrapper{}
+	err = json.Unmarshal(buff, wrapper)
 	if err != nil {
 		return err
 	}
 
-	return restApi.validateBranchStatus(branchSt)
+	wrapper.checkInfo(project, branch)
+	return restApi.validateBranchStatus(wrapper.Component)
 }
 
-func (restApi *restApi) validateBranchStatus(status *branchStatus) error {
+func (restApi *restApi) validateBranchStatus(status branchStatus) error {
 	const statusError = "ERROR"
 	if len(status.Measures) < 1 {
 		return errors.New(fmt.Sprintf("Failure on validate quality gate results\nFor more detail, visit: %s",
@@ -43,6 +44,10 @@ func (restApi *restApi) validateBranchStatus(status *branchStatus) error {
 	return nil
 }
 
+type branchStatusWrapper struct {
+	Component branchStatus `json:"component"`
+}
+
 type branchStatus struct {
 	Measures []branchStatusMeasure `json:"measures"`
 	Branch   string                `json:"branch"`
@@ -51,4 +56,13 @@ type branchStatus struct {
 
 type branchStatusMeasure struct {
 	Value string `json:"value"`
+}
+
+func (wrp *branchStatusWrapper) checkInfo(project string, branch string) {
+	if wrp.Component.Branch == "" {
+		wrp.Component.Branch = branch
+	}
+	if wrp.Component.Project == "" {
+		wrp.Component.Project = project
+	}
 }

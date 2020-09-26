@@ -14,7 +14,7 @@ const (
 )
 
 var rootCmd = &cobra.Command{
-	Use:   "sonarqubeci",
+	Use:   "sonarci",
 	Short: "A simple tool for SonarQube integration",
 	Long:  "SonarQubeFast is a CLI library for help you integrate and use SonarQube inspections.",
 }
@@ -31,6 +31,7 @@ func init() {
 	_ = rootCmd.MarkPersistentFlagRequired(flagServer)
 	_ = rootCmd.MarkPersistentFlagRequired(flagToken)
 
-	rootCmd.AddCommand(searchCmd)
 	rootCmd.AddCommand(versionCmd)
+	rootCmd.AddCommand(searchCmd)
+	rootCmd.AddCommand(validateCmd)
 }

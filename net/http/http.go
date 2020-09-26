@@ -59,8 +59,6 @@ func (connection *httpConnection) DoGet(route string) (<-chan []byte, <-chan err
 			return
 		}
 
-		io.Pipe()
-
 		chOut <- buff
 	}()
 

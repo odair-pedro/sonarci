@@ -20,7 +20,7 @@ var searchCmd = &cobra.Command{
 
 func init() {
 	searchCmd.Flags().StringP(flagProjects, "p", "", "SonarQube projects key. Eg: my-sonar-project | my-sonar-project-1,my-sonar-project-2")
-	_ = rootCmd.MarkFlagRequired(flagProjects)
+	_ = searchCmd.MarkFlagRequired(flagProjects)
 }
 
 func search(cmd *cobra.Command, args []string) {
