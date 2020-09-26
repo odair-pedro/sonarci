@@ -1,8 +1,6 @@
 package sonarrestapi
 
 import (
-	"encoding/base64"
-	"fmt"
 	"net/url"
 	"sonarci/net"
 	"sonarci/net/http"
@@ -16,11 +14,7 @@ type restApi struct {
 }
 
 func NewApi(server string, token string, timeout time.Duration) sonar.Api {
-	return &restApi{http.NewConnection(server, getAuthentication(token), timeout), server}
-}
-
-func getAuthentication(token string) string {
-	return base64.StdEncoding.EncodeToString([]byte(fmt.Sprintf("%s:", token)))
+	return &restApi{http.NewConnection(server, token, timeout), server}
 }
 
 func escapeValue(value string) string {
