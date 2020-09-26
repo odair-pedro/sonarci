@@ -15,7 +15,7 @@ func (restApi *restApi) SearchProjects(projects string) (<-chan sonar.Project, e
 	}
 
 	buff := <-chBuff
-	resp := &searchProjectsResp{}
+	resp := &searchProjectsWrapper{}
 	err = json.Unmarshal(buff, resp)
 	if err != nil {
 		return nil, err
@@ -38,11 +38,11 @@ func (restApi *restApi) SearchProjects(projects string) (<-chan sonar.Project, e
 	return chOut, nil
 }
 
-type searchProjectsResp struct {
-	Components []searchProjectsRespComp `json:"components"`
+type searchProjectsWrapper struct {
+	Components []searchProject `json:"components"`
 }
 
-type searchProjectsRespComp struct {
+type searchProject struct {
 	Id           string `json:"id"`
 	Organization string `json:"organization"`
 	Key          string `json:"key"`
