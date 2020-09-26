@@ -8,21 +8,22 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"sonarci/net"
 	"strings"
 	"time"
 )
 
-type Connection struct {
+type httpConnection struct {
 	Server  string
 	Token   string
 	Timeout time.Duration
 }
 
-func NewConnection(server string, token string, timeout time.Duration) *Connection {
-	return &Connection{Server: server, Token: token, Timeout: timeout}
+func NewConnection(server string, token string, timeout time.Duration) net.Connection {
+	return &httpConnection{Server: server, Token: token, Timeout: timeout}
 }
 
-func (connection *Connection) DoGet(route string) (<-chan []byte, <-chan error) {
+func (connection *httpConnection) DoGet(route string) (<-chan []byte, <-chan error) {
 	chOut := make(chan []byte, 1)
 	chErr := make(chan error, 1)
 

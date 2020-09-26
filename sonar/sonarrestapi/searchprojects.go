@@ -1,33 +1,31 @@
-package rest
+package sonarrestapi
 
 import (
 	"encoding/json"
-	"sonarci/http"
-	"sonarci/sonar/abstract"
+	"sonarci/sonar"
 )
 
 const routeSearchProjects = "/api/projects/search?projects="
 
-func (api restApi) SearchProjects(projects string) (<-chan abstract.Project, error) {
-	conn := http.NewConnection(api.server, api.token, api.timeout)
-	chBuff, chErr := conn.DoGet(routeSearchProjects + projects)
+func (restApi *restApi) SearchProjects(projects string) (<-chan sonar.Project, error) {
+	chBuff, chErr := restApi.DoGet(routeSearchProjects + projects)
 	err := <-chErr
 	if err != nil {
 		return nil, err
 	}
 
 	buff := <-chBuff
-	resp := &searchProjectsResp{}
+	resp := &searchProjectsWrapper{}
 	err = json.Unmarshal(buff, resp)
 	if err != nil {
 		return nil, err
 	}
 
-	chOut := make(chan abstract.Project, len(resp.Components))
+	chOut := make(chan sonar.Project, len(resp.Components))
 	go func() {
 		defer close(chOut)
 		for _, comp := range resp.Components {
-			chOut <- abstract.Project{
+			chOut <- sonar.Project{
 				Id:           comp.Id,
 				Organization: comp.Organization,
 				Key:          comp.Key,
@@ -40,11 +38,11 @@ func (api restApi) SearchProjects(projects string) (<-chan abstract.Project, err
 	return chOut, nil
 }
 
-type searchProjectsResp struct {
-	Components []searchProjectsRespComp `json:"components"`
+type searchProjectsWrapper struct {
+	Components []searchProject `json:"components"`
 }
 
-type searchProjectsRespComp struct {
+type searchProject struct {
 	Id           string `json:"id"`
 	Organization string `json:"organization"`
 	Key          string `json:"key"`

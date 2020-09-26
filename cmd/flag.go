@@ -13,7 +13,7 @@ type persistentFlags struct {
 }
 
 func getPersistentFlagsFromCmd(cmd *cobra.Command) *persistentFlags {
-	flags := cmd.Parent().PersistentFlags()
+	flags := cmd.Root().PersistentFlags()
 	server, _ := flags.GetString(flagServer)
 	if !validateFlag(flagToken, server) {
 		return nil

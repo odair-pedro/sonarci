@@ -3,7 +3,7 @@ package cmd
 import (
 	"github.com/spf13/cobra"
 	"log"
-	"sonarci/sonar"
+	"sonarci/sonar/sonarrestapi"
 	"strings"
 )
 
@@ -20,7 +20,7 @@ var searchCmd = &cobra.Command{
 
 func init() {
 	searchCmd.Flags().StringP(flagProjects, "p", "", "SonarQube projects key. Eg: my-sonar-project | my-sonar-project-1,my-sonar-project-2")
-	_ = rootCmd.MarkPersistentFlagRequired(flagProjects)
+	_ = searchCmd.MarkFlagRequired(flagProjects)
 }
 
 func search(cmd *cobra.Command, args []string) {
@@ -35,7 +35,7 @@ func search(cmd *cobra.Command, args []string) {
 		return
 	}
 
-	api := sonar.NewApi(pFlags.Server, pFlags.Token, pFlags.Timeout)
+	api := sonarrestapi.NewApi(pFlags.Server, pFlags.Token, pFlags.Timeout)
 	results, err := api.SearchProjects(projects)
 	if err != nil {
 		log.Fatalln("Failure to search projects: ", err)
