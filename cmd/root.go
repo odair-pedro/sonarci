@@ -16,7 +16,7 @@ const (
 var rootCmd = &cobra.Command{
 	Use:   "sonarci",
 	Short: "A simple tool for SonarQube integration",
-	Long:  "SonarQubeFast is a CLI library for help you integrate and use SonarQube inspections.",
+	Long:  "SonarCI is a CLI library for help you integrate and use SonarQube inspections.",
 }
 
 func Execute() error {
