@@ -77,19 +77,19 @@ func Test_restApi_validateBranchStatus_checkErrorMessage(t *testing.T) {
 			name:       "measures-nil",
 			fields:     fields{&mockConnection{}, "http://server"},
 			args:       args{status: branchStatus{Measures: nil, Branch: "branch", Project: "project"}},
-			wantErrMsg: "Failure on validate quality gate results\nFor more detail, visit: http://server/dashboard?branch=branch&id=project",
+			wantErrMsg: "Failure on validate quality gate results\nFor more detail, visit: http://server/dashboard?id=project&branch=branch",
 		},
 		{
 			name:       "measures-empty",
 			fields:     fields{&mockConnection{}, "http://server"},
 			args:       args{status: branchStatus{Measures: nil, Branch: "branch", Project: "project"}},
-			wantErrMsg: "Failure on validate quality gate results\nFor more detail, visit: http://server/dashboard?branch=branch&id=project",
+			wantErrMsg: "Failure on validate quality gate results\nFor more detail, visit: http://server/dashboard?id=project&branch=branch",
 		},
 		{
 			name:       "measures-error",
 			fields:     fields{&mockConnection{}, "http://server"},
 			args:       args{status: branchStatus{Measures: []branchStatusMeasure{{Value: "ERROR"}, {Value: "OK"}}, Branch: "branch-name", Project: "project"}},
-			wantErrMsg: "Branch branch-name has not been passed on quality gate\nFor more detail, visit: http://server/dashboard?branch=branch-name&id=project",
+			wantErrMsg: "Branch branch-name has not been passed on quality gate\nFor more detail, visit: http://server/dashboard?id=project&branch=branch-name",
 		},
 		{
 			name:       "measures-ok",

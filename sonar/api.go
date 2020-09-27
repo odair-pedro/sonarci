@@ -12,4 +12,5 @@ type Api interface {
 	GetServerVersion() (string, error)
 	SearchProjects(projects string) (<-chan Project, error)
 	ValidateBranch(project string, branch string) error
+	ValidatePullRequest(project string, pullRequest string) error
 }
