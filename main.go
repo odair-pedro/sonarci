@@ -6,12 +6,17 @@ import (
 	"sonarci/logging"
 )
 
+var version string
+
 func main() {
 	logging.Setup()
 	startRootCommand()
 }
 
 func startRootCommand() {
+	if version != "" {
+		cmd.SetVersion(version)
+	}
 	if err := cmd.Execute(); err != nil {
 		log.Fatalln(err.Error())
 	}

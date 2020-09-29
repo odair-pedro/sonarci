@@ -6,10 +6,9 @@ import (
 )
 
 const (
-	flagServer = "server"
-	flagToken  = "token"
-	flagTimout = "timeout"
-
+	flagServer     = "server"
+	flagToken      = "token"
+	flagTimout     = "timeout"
 	timeoutDefault = 30000
 )
 
@@ -23,6 +22,10 @@ func Execute() error {
 	return rootCmd.Execute()
 }
 
+func SetVersion(version string) {
+	rootCmd.Version = version
+}
+
 func init() {
 	rootCmd.PersistentFlags().StringP(flagServer, "s", "", "SonarQube server address")
 	rootCmd.PersistentFlags().StringP(flagToken, "o", "", "Authentication Token")
@@ -31,7 +34,7 @@ func init() {
 	_ = rootCmd.MarkPersistentFlagRequired(flagServer)
 	_ = rootCmd.MarkPersistentFlagRequired(flagToken)
 
-	rootCmd.AddCommand(versionCmd)
+	rootCmd.AddCommand(serverVersionCmd)
 	rootCmd.AddCommand(searchCmd)
 	rootCmd.AddCommand(validateCmd)
 }

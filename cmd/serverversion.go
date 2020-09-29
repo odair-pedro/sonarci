@@ -6,14 +6,14 @@ import (
 	"sonarci/sonar/sonarrestapi"
 )
 
-var versionCmd = &cobra.Command{
-	Use:   "version",
+var serverVersionCmd = &cobra.Command{
+	Use:   "server-version",
 	Short: "Get SonarQube server version",
 	Long:  "Get SonarQube server version",
-	Run:   version,
+	Run:   serverVersion,
 }
 
-func version(cmd *cobra.Command, args []string) {
+func serverVersion(cmd *cobra.Command, args []string) {
 	_ = args
 
 	pFlags := getPersistentFlagsFromCmd(cmd)
