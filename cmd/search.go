@@ -38,7 +38,7 @@ func search(cmd *cobra.Command, args []string) {
 	api := sonarrestapi.NewApi(pFlags.Server, pFlags.Token, pFlags.Timeout)
 	results, err := api.SearchProjects(projects)
 	if err != nil {
-		log.Fatalln("Failure to search projects: ", err)
+		log.Fatal("Failure to search projects: ", err)
 	}
 
 	const colSize = 30
