@@ -4,9 +4,11 @@ A simple CLI for help you integrate SonarQube inspections with CI pipelines.
 [![build](https://github.com/odair-pedro/sonarci/workflows/build/badge.svg)](https://github.com/odair-pedro/sonarci/actions?query=workflow%3ABuild)
 [![Coverage Status](https://coveralls.io/repos/github/odair-pedro/sonarci/badge.svg?branch=master)](https://coveralls.io/github/odair-pedro/sonarci?branch=master)
 [![Go Report Card](https://goreportcard.com/badge/github.com/odair-pedro/sonarci)](https://goreportcard.com/report/github.com/odair-pedro/sonarci)
-
 [![GitHub](https://img.shields.io/github/license/odair-pedro/sonarci)](https://github.com/odair-pedro/sonarci/blob/master/LICENSE)
+
+[![GitHub version](https://badge.fury.io/gh/odair-pedro%2Fsonarci.svg)](https://github.com/odair-pedro/2Fsonarci/releases/latest)
 [![Open Source Helpers](https://www.codetriage.com/odair-pedro/sonarci/badges/users.svg)](https://www.codetriage.com/odair-pedro/sonarci)
+
 
 ## Usage
 
