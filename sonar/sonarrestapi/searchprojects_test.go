@@ -87,11 +87,7 @@ func Test_restApi_SearchProjects(t *testing.T) {
 				t.Errorf("SearchProjects() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
-			if chGot == nil {
-				t.Errorf("SearchProjects() got nil, want %v", tt.wantErr)
-				return
-			}
-			if !tt.wantErr {
+			if chGot != nil && !tt.wantErr {
 				got := <-chGot
 				if got != tt.want {
 					t.Errorf("SearchProjects() got = %v, want %v", got, tt.want)
