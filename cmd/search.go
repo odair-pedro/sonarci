@@ -52,6 +52,6 @@ func search(cmd *cobra.Command, args []string) {
 	}
 }
 
-func padRight(str string, sufix string, count int) string {
-	return str + strings.Repeat(sufix, count-len(str))
+func padRight(str string, suffix string, count int) string {
+	return str + strings.Repeat(suffix, count-len(str))
 }
