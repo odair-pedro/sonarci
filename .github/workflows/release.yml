@@ -14,8 +14,9 @@ jobs:
         uses: actions/checkout@v2
       - name: Make
         run: |
-          pkgversion=`echo ${{ secrets.GITHUB_TOKEN }} | sed -r 's/[v]+//g'`
-          make version=$pkgversion
+          PKG_VERSION=`echo ${{ github.ref }} | sed -r 's/[refs\/tags\/v]+//g'`          
+          echo Version: $PKG_VERSION
+          make version=$PKG_VERSION
           zip sonarci-win-x64.zip sonarci.exe README.md
           tar -czvf sonarci-linux-x64.tar.gz sonarci README.md 
       - name: Create Release

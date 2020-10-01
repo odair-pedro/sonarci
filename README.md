@@ -6,8 +6,6 @@ A simple CLI for help you integrate SonarQube inspections with CI pipelines.
 [![Go Report Card](https://goreportcard.com/badge/github.com/odair-pedro/sonarci)](https://goreportcard.com/report/github.com/odair-pedro/sonarci)
 
 [![GitHub version](https://badge.fury.io/gh/odair-pedro%2Fsonarci.svg)](https://github.com/odair-pedro/sonarci/releases/latest)
-[![GitHub](https://img.shields.io/github/license/odair-pedro/sonarci)](https://github.com/odair-pedro/sonarci/blob/master/LICENSE)
-
 [![Open Source Helpers](https://www.codetriage.com/odair-pedro/sonarci/badges/users.svg)](https://www.codetriage.com/odair-pedro/sonarci)
 
 
@@ -18,27 +16,29 @@ A simple CLI for help you integrate SonarQube inspections with CI pipelines.
 ```
 
 ```
-SonarQubeFast is a CLI library for help you integrate and use SonarQube inspections.
+SonarCI is a CLI library for help you integrate and use SonarQube inspections.
 
 Usage:
-  sonarqubeci [command]
+  sonarci [command]
 
 Available Commands:
-  help        Help about any command
-  search      Search for SonarQube projects
-  version     Get SonarQube server version
+  help           Help about any command
+  search         Search for SonarQube projects
+  server-version Get SonarQube server version
+  validate       Validate quality gate status
 
 Flags:
-  -h, --help            help for sonarqubeci
+  -h, --help            help for sonarci
   -s, --server string   SonarQube server address
   -t, --timeout int     Timeout in milliseconds. Default value is 30000 ms
   -o, --token string    Authentication Token
+  -v, --version         version for sonarci
 
-Use "sonarqubeci [command] --help" for more information about a command.
+Use "sonarci [command] --help" for more information about a command.
 
 ```
 
-### Search Command
+### Search Projects Command
 ```
 ./sonarci search --help
 ```
@@ -47,7 +47,7 @@ Use "sonarqubeci [command] --help" for more information about a command.
 Search and retrieve information about the specified SonarQube projects.
 
 Usage:
-  sonarqubeci search [flags]
+  sonarci search [flags]
 
 Flags:
   -h, --help              help for search
@@ -57,7 +57,36 @@ Global Flags:
   -s, --server string   SonarQube server address
   -t, --timeout int     Timeout in milliseconds. Default value is 30000 ms
   -o, --token string    Authentication Token
+```
 
+### Server Version Command
+```
+./sonarci server-version --help
+```
+
+```
+Get SonarQube server version
+
+Usage:
+  sonarci server-version [flags]
+
+Flags:
+  -h, --help   help for server-version
+
+Global Flags:
+  -s, --server string   SonarQube server address
+  -t, --timeout int     Timeout in milliseconds. Default value is 30000 ms
+  -o, --token string    Authentication Token
+```
+
+## Building from source
+On root directory, run the command:
+```
+make build-linux
+``` 
+or 
+```
+make build-windows
 ```
 
 ## Looking for examples?
