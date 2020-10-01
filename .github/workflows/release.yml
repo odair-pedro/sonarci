@@ -15,8 +15,8 @@ jobs:
       - name: Make
         run: |
           PKG_VERSION=`echo ${{ secrets.GITHUB_TOKEN }} | sed -r 's/[v]+//g'`          
-          echo $(PKG_VERSION)
-          make version=$(PKG_VERSION)
+          echo Version: $PKG_VERSION
+          make version=$PKG_VERSION
           zip sonarci-win-x64.zip sonarci.exe README.md
           tar -czvf sonarci-linux-x64.tar.gz sonarci README.md 
       - name: Create Release
