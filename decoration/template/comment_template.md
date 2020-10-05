@@ -14,3 +14,23 @@
 | Vulnerabilities | Security Hotspots | New Vulnerabilities | New Security Hotspots |
 |-|-|-|-|
 |![Status](https://img.shields.io/badge/B-1-brightgreen?style=for-the-badge)|19|![Status](https://img.shields.io/badge/C-10-yellow?style=for-the-badge)|29
+
+
+${condition(obj.IsValid equal "123")}
+Value is equal 123
+
+### Security
+| Vulnerabilities | Security Hotspots | New Vulnerabilities | New Security Hotspots |
+|-|-|-|-|
+|![Status](https://img.shields.io/badge/B-1-brightgreen?style=for-the-badge)|19|![Status](https://img.shields.io/badge/C-10-yellow?style=for-the-badge)|29
+${end-condition}
+
+${condition(obj.IsValid not-equal "123")}
+Value is not equal 123
+${end-condition}
+
+${loop(obj.List->element)}
+| Bugs | New Bugs |
+|-|-|
+|$(element.Bugs)|$(element.NewBugs)|
+${end-loop}
