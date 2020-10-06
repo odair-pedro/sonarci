@@ -17,7 +17,7 @@ curl -sSL https://raw.githubusercontent.com/odair-pedro/sonarci/master/install-l
 ````
 
 ### From source
-Those who want to install from source code may install using the following command (on root directory):
+Those who want to install from source code may use the following command (on root directory):
 
 ``` 
 make build
