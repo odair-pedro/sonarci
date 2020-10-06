@@ -59,6 +59,9 @@ Use "sonarci [command] --help" for more information about a command.
 ```
 
 ### Command: Search projects
+
+Search and retrieve information about the specified SonarQube projects.
+
 ```
 ./sonarci search --help
 ```
@@ -80,6 +83,9 @@ Global Flags:
 ```
 
 ### Comand: Server version
+
+Get SonarQube server version.
+
 ```
 ./sonarci server-version --help
 ```
@@ -100,6 +106,9 @@ Global Flags:
 ```
 
 ### Command: Validate
+
+Validate a branch or pull request status on SonarQube.
+
 ```
 ./sonarci validate --help
 ```
@@ -124,6 +133,9 @@ Global Flags:
 ```
 
 #### Branch validation
+
+Validate a branch status on SonarQube.
+
 ```
 ./sonarci validate branch --help
 ```
@@ -145,6 +157,9 @@ Global Flags:
 ```
 
 #### Pull request validation
+
+Validate a pull request status on SonarQube.
+
 ```
 ./sonarci validate pr --help
 ```
