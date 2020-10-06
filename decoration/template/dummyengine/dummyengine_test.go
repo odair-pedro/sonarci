@@ -17,3 +17,22 @@ func Test_dummyEngine_ProcessTemplate(t *testing.T) {
 		t.Errorf("Result invalid, want \"%s\" but got \"%s\"", want, got)
 	}
 }
+
+func Test_dummyEngine_ProcessTemplate_WithInvalidTemplate_ShouldReturnError(t *testing.T) {
+	eng := NewEngine()
+	_, err := eng.ProcessTemplate("", struct{}{})
+
+	wantErr := "invalid template"
+	if err == nil || err.Error() != wantErr {
+		t.Errorf("Should return error message \"%s\" but return \"%s\"", wantErr, err)
+	}
+}
+
+func Test_dummyEngine_ProcessTemplate_WithInvalidTemplate_ShouldNotReturnValue(t *testing.T) {
+	eng := NewEngine()
+	got, _ := eng.ProcessTemplate("", struct{}{})
+
+	if got != "" {
+		t.Errorf("Should return nil but empty \"%s\"", got)
+	}
+}
