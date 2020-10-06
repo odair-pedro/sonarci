@@ -20,7 +20,7 @@ curl -sSL https://raw.githubusercontent.com/odair-pedro/sonarci/master/install-l
 Those who want to install from source code may install using the following command (on root directory):
 
 ``` 
-make
+make build
 ``` 
 
 ###### Note: SonarCI will be installed on current directory
@@ -95,16 +95,6 @@ Global Flags:
   -s, --server string   SonarQube server address
   -t, --timeout int     Timeout in milliseconds. Default value is 30000 ms
   -o, --token string    Authentication Token
-```
-
-## Building from source
-On root directory, run the command:
-```
-make build-linux
-``` 
-or 
-```
-make build-windows
 ```
 
 ## Looking for examples?
