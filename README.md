@@ -25,8 +25,6 @@ make build
 
 ###### Note: SonarCI will be installed on current directory
 
----
-
 ## Usage
 
 ```
@@ -56,7 +54,7 @@ Use "sonarci [command] --help" for more information about a command.
 
 ```
 
-### Search Projects Command
+### Command: Search projects
 ```
 ./sonarci search --help
 ```
@@ -77,7 +75,7 @@ Global Flags:
   -o, --token string    Authentication Token
 ```
 
-### Server Version Command
+### Comand: Server version
 ```
 ./sonarci server-version --help
 ```
@@ -90,6 +88,72 @@ Usage:
 
 Flags:
   -h, --help   help for server-version
+
+Global Flags:
+  -s, --server string   SonarQube server address
+  -t, --timeout int     Timeout in milliseconds. Default value is 30000 ms
+  -o, --token string    Authentication Token
+```
+
+### Command: Validate
+```
+./sonarci validate --help
+```
+
+```
+Validate a branch or pull request status on SonarQube.
+
+Usage:
+  sonarci validate [command]
+
+Available Commands:
+  branch      Validate branch status
+  pr          Validate pull request status
+
+Flags:
+  -h, --help   help for validate
+
+Global Flags:
+  -s, --server string   SonarQube server address
+  -t, --timeout int     Timeout in milliseconds. Default value is 30000 ms
+  -o, --token string    Authentication Token
+```
+
+#### Branch validation
+```
+./sonarci validate branch --help
+```
+
+```
+Validate a branch status on SonarQube.
+
+Usage:
+  sonarci validate branch [branch name] [flags]
+
+Flags:
+  -h, --help             help for branch
+  -p, --project string   SonarQube projects key
+
+Global Flags:
+  -s, --server string   SonarQube server address
+  -t, --timeout int     Timeout in milliseconds. Default value is 30000 ms
+  -o, --token string    Authentication Token
+```
+
+#### Pull request validation
+```
+./sonarci validate pr --help
+```
+
+```
+Validate a pull request status on SonarQube.
+
+Usage:
+  sonarci validate pr [pull request id] [flags]
+
+Flags:
+  -h, --help             help for pr
+  -p, --project string   SonarQube projects key
 
 Global Flags:
   -s, --server string   SonarQube server address
