@@ -1,5 +1,7 @@
 all: deps test build-linux build-windows
 
+build: build-linux build-windows
+
 deps:
 	go get -v -t -d
 
