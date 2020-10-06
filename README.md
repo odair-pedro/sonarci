@@ -23,7 +23,7 @@ Those who want to install from source code using the following command (on root 
 make
 ``` 
 
-##### Note: SonarCI will be installed on current directory
+###### Note: SonarCI will be installed on current directory
 
 ---
 
