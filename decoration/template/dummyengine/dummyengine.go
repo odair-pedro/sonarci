@@ -30,7 +30,7 @@ func (eng *dummyEngine) ProcessTemplate(template string, dataSource interface{})
 func (eng *dummyEngine) processDataSource(dataSource interface{}) (string, error) {
 	v := reflect.ValueOf(dataSource)
 	if v.Kind() != reflect.Struct {
-		return "", errors.New("data source is not a struct")
+		return "", errors.New("invalid data source, it is not a struct")
 	}
 
 	t := reflect.TypeOf(dataSource)
