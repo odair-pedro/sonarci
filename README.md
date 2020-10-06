@@ -8,6 +8,8 @@ A simple CLI for help you integrate SonarQube inspections with CI pipelines.
 [![GitHub version](https://badge.fury.io/gh/odair-pedro%2Fsonarci.svg)](https://github.com/odair-pedro/sonarci/releases/latest)
 [![Open Source Helpers](https://www.codetriage.com/odair-pedro/sonarci/badges/users.svg)](https://www.codetriage.com/odair-pedro/sonarci)
 
+---
+
 ## Installation
 
 ### Automated
@@ -25,6 +27,8 @@ make build
 
 ###### Note: SonarCI will be installed on current directory
 
+
+---
 ## Usage
 
 ```
