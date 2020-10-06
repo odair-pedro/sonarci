@@ -8,7 +8,27 @@ A simple CLI for help you integrate SonarQube inspections with CI pipelines.
 [![GitHub version](https://badge.fury.io/gh/odair-pedro%2Fsonarci.svg)](https://github.com/odair-pedro/sonarci/releases/latest)
 [![Open Source Helpers](https://www.codetriage.com/odair-pedro/sonarci/badges/users.svg)](https://www.codetriage.com/odair-pedro/sonarci)
 
+---
 
+## Installation
+
+### Automated
+Those who want to get started quickly and easily may install using the following command.
+``` 
+curl -sSL https://raw.githubusercontent.com/odair-pedro/sonarci/master/install-local.sh | bash
+````
+
+### From source
+Those who want to install from source code may use the following command (on root directory):
+
+``` 
+make build
+``` 
+
+###### Note: SonarCI will be installed on current directory
+
+
+---
 ## Usage
 
 ```
@@ -38,7 +58,7 @@ Use "sonarci [command] --help" for more information about a command.
 
 ```
 
-### Search Projects Command
+### Command: Search projects
 ```
 ./sonarci search --help
 ```
@@ -59,7 +79,7 @@ Global Flags:
   -o, --token string    Authentication Token
 ```
 
-### Server Version Command
+### Comand: Server version
 ```
 ./sonarci server-version --help
 ```
@@ -79,14 +99,70 @@ Global Flags:
   -o, --token string    Authentication Token
 ```
 
-## Building from source
-On root directory, run the command:
+### Command: Validate
 ```
-make build-linux
-``` 
-or 
+./sonarci validate --help
 ```
-make build-windows
+
+```
+Validate a branch or pull request status on SonarQube.
+
+Usage:
+  sonarci validate [command]
+
+Available Commands:
+  branch      Validate branch status
+  pr          Validate pull request status
+
+Flags:
+  -h, --help   help for validate
+
+Global Flags:
+  -s, --server string   SonarQube server address
+  -t, --timeout int     Timeout in milliseconds. Default value is 30000 ms
+  -o, --token string    Authentication Token
+```
+
+#### Branch validation
+```
+./sonarci validate branch --help
+```
+
+```
+Validate a branch status on SonarQube.
+
+Usage:
+  sonarci validate branch [branch name] [flags]
+
+Flags:
+  -h, --help             help for branch
+  -p, --project string   SonarQube projects key
+
+Global Flags:
+  -s, --server string   SonarQube server address
+  -t, --timeout int     Timeout in milliseconds. Default value is 30000 ms
+  -o, --token string    Authentication Token
+```
+
+#### Pull request validation
+```
+./sonarci validate pr --help
+```
+
+```
+Validate a pull request status on SonarQube.
+
+Usage:
+  sonarci validate pr [pull request id] [flags]
+
+Flags:
+  -h, --help             help for pr
+  -p, --project string   SonarQube projects key
+
+Global Flags:
+  -s, --server string   SonarQube server address
+  -t, --timeout int     Timeout in milliseconds. Default value is 30000 ms
+  -o, --token string    Authentication Token
 ```
 
 ## Looking for examples?
