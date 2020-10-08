@@ -15,7 +15,7 @@ A simple CLI for help you integrate SonarQube inspections with CI pipelines.
 ### Automated
 Those who want to get started quickly and easily may install using the following command.
 ``` 
-curl -sSL https://raw.githubusercontent.com/odair-pedro/sonarci/master/install-local.sh | bash
+curl -sSL https://raw.githubusercontent.com/odair-pedro/sonarci/master/install-local.sh | sh
 ````
 
 ### From source
