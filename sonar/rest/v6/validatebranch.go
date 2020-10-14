@@ -1,4 +1,4 @@
-package sonarrestapi
+package v6
 
 import (
 	"encoding/json"
@@ -7,11 +7,14 @@ import (
 	"strings"
 )
 
-const routeValidateBranch = "/api/measures/component?componentKey=%s&branch=%s&metricKeys=alert_status"
 const routeBranchDetails = "/dashboard?id=%s&branch=%s"
 
-func (restApi *restApi) ValidateBranch(project string, branch string) error {
-	chBuff, chErr := restApi.DoGet(fmt.Sprintf(routeValidateBranch, escapeValue(project), escapeValue(branch)))
+func (restApi *RestApi) GetRouteForValidateBranch() string {
+	return "/api/measures/component?componentKey=%s&branch=%s&metricKeys=alert_status"
+}
+
+func (restApi *RestApi) ValidateBranch(project string, branch string) error {
+	chBuff, chErr := restApi.DoGet(fmt.Sprintf(restApi.GetRouteForValidateBranch(), escapeValue(project), escapeValue(branch)))
 	err := <-chErr
 	if err != nil {
 		return err
@@ -28,7 +31,7 @@ func (restApi *restApi) ValidateBranch(project string, branch string) error {
 	return restApi.validateBranchStatus(wrapper.Component)
 }
 
-func (restApi *restApi) validateBranchStatus(status branchStatus) error {
+func (restApi *RestApi) validateBranchStatus(status branchStatus) error {
 	const statusError = "ERROR"
 	if len(status.Measures) < 1 {
 		return errors.New(fmt.Sprintf("Failure on validate quality gate results\nFor more detail, visit: %s",

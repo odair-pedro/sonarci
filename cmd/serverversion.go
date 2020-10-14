@@ -3,14 +3,18 @@ package cmd
 import (
 	"github.com/spf13/cobra"
 	"log"
-	"sonarci/sonar/sonarrestapi"
+	"sonarci/sonar/rest/factory"
 )
 
-var serverVersionCmd = &cobra.Command{
-	Use:   "server-version",
-	Short: "Get SonarQube server version",
-	Long:  "Get SonarQube server version",
-	Run:   serverVersion,
+func NewServerVersionCmd() *cobra.Command {
+	serverVersionCmd := &cobra.Command{
+		Use:   "server-version",
+		Short: "Get SonarQube server version",
+		Long:  "Get SonarQube server version",
+		Run:   serverVersion,
+	}
+
+	return serverVersionCmd
 }
 
 func serverVersion(cmd *cobra.Command, args []string) {
@@ -21,7 +25,7 @@ func serverVersion(cmd *cobra.Command, args []string) {
 		return
 	}
 
-	api := sonarrestapi.NewApi(pFlags.Server, pFlags.Token, pFlags.Timeout)
+	api := factory.GetLatestSonarApi(pFlags.Server, pFlags.Token, pFlags.Timeout)
 	version, err := api.GetServerVersion()
 	if err != nil {
 		log.Fatal("Failure to get server version: ", err)

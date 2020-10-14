@@ -1,4 +1,4 @@
-package sonarrestapi
+package v6
 
 import (
 	"encoding/json"
@@ -7,11 +7,14 @@ import (
 	"strings"
 )
 
-const routeValidatePullRequest = "/api/measures/component?componentKey=%s&pullRequest=%s&metricKeys=alert_status"
 const routePullRequestDetails = "/dashboard?id=%s&pullRequest=%s"
 
-func (restApi *restApi) ValidatePullRequest(project string, pullRequest string) error {
-	chBuff, chErr := restApi.DoGet(fmt.Sprintf(routeValidatePullRequest, escapeValue(project), pullRequest))
+func (restApi *RestApi) GetRouteForValidatePullRequest() string {
+	return "/api/measures/component?componentKey=%s&pullRequest=%s&metricKeys=alert_status"
+}
+
+func (restApi *RestApi) ValidatePullRequest(project string, pullRequest string) error {
+	chBuff, chErr := restApi.DoGet(fmt.Sprintf(restApi.GetRouteForValidatePullRequest(), escapeValue(project), pullRequest))
 	err := <-chErr
 	if err != nil {
 		return err
@@ -28,7 +31,7 @@ func (restApi *restApi) ValidatePullRequest(project string, pullRequest string) 
 	return restApi.validatePullRequestStatus(wrapper.Component)
 }
 
-func (restApi *restApi) validatePullRequestStatus(status pullRequestStatus) error {
+func (restApi *RestApi) validatePullRequestStatus(status pullRequestStatus) error {
 	const statusError = "ERROR"
 	if len(status.Measures) < 1 {
 		return errors.New(fmt.Sprintf("Failure on validate quality gate results\nFor more detail, visit: %s",

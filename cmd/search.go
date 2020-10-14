@@ -3,7 +3,7 @@ package cmd
 import (
 	"github.com/spf13/cobra"
 	"log"
-	"sonarci/sonar/sonarrestapi"
+	"sonarci/sonar/rest/factory"
 	"strings"
 )
 
@@ -11,20 +11,35 @@ const (
 	flagProjects = "projects"
 )
 
-var searchCmd = &cobra.Command{
-	Use:   "search",
-	Short: "Search for SonarQube projects",
-	Long:  "Search and retrieve information about the specified SonarQube projects.",
-	Run:   search,
-}
+func NewSearchCmd() *cobra.Command {
+	searchCmd := &cobra.Command{
+		Use:   "search",
+		Short: "Search for SonarQube projects",
+		Long:  "Search and retrieve information about the specified SonarQube projects.",
+		Run:   search,
+	}
 
-func init() {
 	searchCmd.Flags().StringP(flagProjects, "p", "", "SonarQube projects key. Eg: my-sonar-project | my-sonar-project-1,my-sonar-project-2")
 	_ = searchCmd.MarkFlagRequired(flagProjects)
+
+	return searchCmd
 }
+
+//var searchCmd = &cobra.Command{
+//	Use:   "search",
+//	Short: "Search for SonarQube projects",
+//	Long:  "Search and retrieve information about the specified SonarQube projects.",
+//	Run:   search,
+//}
+//
+//func init() {
+//	searchCmd.Flags().StringP(flagProjects, "p", "", "SonarQube projects key. Eg: my-sonar-project | my-sonar-project-1,my-sonar-project-2")
+//	_ = searchCmd.MarkFlagRequired(flagProjects)
+//}
 
 func search(cmd *cobra.Command, args []string) {
 	_ = args
+
 	projects, _ := cmd.Flags().GetString(flagProjects)
 	if !validateFlag(flagProjects, projects) {
 		return
@@ -35,7 +50,7 @@ func search(cmd *cobra.Command, args []string) {
 		return
 	}
 
-	api := sonarrestapi.NewApi(pFlags.Server, pFlags.Token, pFlags.Timeout)
+	api := factory.GetLatestSonarApi(pFlags.Server, pFlags.Token, pFlags.Timeout)
 	results, err := api.SearchProjects(projects)
 	if err != nil {
 		log.Fatal("Failure to search projects: ", err)
@@ -52,6 +67,6 @@ func search(cmd *cobra.Command, args []string) {
 	}
 }
 
-func padRight(str string, suffix string, count int) string {
-	return str + strings.Repeat(suffix, count-len(str))
+func padRight(str string, suffix string, length int) string {
+	return (str + strings.Repeat(suffix, length-len(str)))[:length]
 }

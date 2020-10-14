@@ -1,4 +1,4 @@
-package sonarrestapi
+package v6
 
 import (
 	"testing"
@@ -13,13 +13,13 @@ func (connection *mockConnection) DoGet(route string) (<-chan []byte, <-chan err
 	return connection.doGet(route)
 }
 
-func TestNewApi(t *testing.T) {
+func Test_NewRestApi(t *testing.T) {
 	const server = "server"
 	const token = "token"
 	timeout := time.Duration(1)
 
-	if got := NewApi(server, token, timeout); got == nil {
-		t.Errorf("getAuthentication() = nil")
+	if got := NewRestApi(server, token, timeout); got == nil {
+		t.Errorf("NewRestApi() return nil")
 	}
 }
 

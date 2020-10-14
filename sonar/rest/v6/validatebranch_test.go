@@ -1,4 +1,4 @@
-package sonarrestapi
+package v6
 
 import (
 	"encoding/json"
@@ -48,7 +48,7 @@ func Test_restApi_validateBranchStatus_checkError(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			restApi := &restApi{
+			restApi := &RestApi{
 				Connection: tt.fields.Connection,
 				Server:     tt.fields.Server,
 			}
@@ -100,7 +100,7 @@ func Test_restApi_validateBranchStatus_checkErrorMessage(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			restApi := &restApi{
+			restApi := &RestApi{
 				Connection: tt.fields.Connection,
 				Server:     tt.fields.Server,
 			}
@@ -169,7 +169,7 @@ func Test_restApi_ValidateBranch(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			restApi := &restApi{
+			restApi := &RestApi{
 				Connection: tt.fields.Connection,
 				Server:     tt.fields.Server,
 			}
@@ -177,5 +177,16 @@ func Test_restApi_ValidateBranch(t *testing.T) {
 				t.Errorf("ValidateBranch() error = %v, wantErr %v", err, tt.wantErr)
 			}
 		})
+	}
+}
+
+func TestRestApi_GetRouteForValidateBranch(t *testing.T) {
+	const want = "/api/measures/component?componentKey=%s&branch=%s&metricKeys=alert_status"
+
+	restApi := &RestApi{}
+	got := restApi.GetRouteForValidateBranch()
+
+	if got != want {
+		t.Errorf("GetRouteForValidateBranch() got %s, want %s", got, want)
 	}
 }

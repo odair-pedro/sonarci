@@ -1,4 +1,4 @@
-package sonarrestapi
+package v6
 
 import (
 	"encoding/json"
@@ -78,7 +78,7 @@ func Test_restApi_SearchProjects(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			restApi := &restApi{
+			restApi := &RestApi{
 				Connection: tt.fields.Connection,
 				Server:     tt.fields.Server,
 			}

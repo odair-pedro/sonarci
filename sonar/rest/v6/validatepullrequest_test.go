@@ -1,4 +1,4 @@
-package sonarrestapi
+package v6
 
 import (
 	"encoding/json"
@@ -48,7 +48,7 @@ func Test_restApi_validatePullRequestStatus_checkError(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			restApi := &restApi{
+			restApi := &RestApi{
 				Connection: tt.fields.Connection,
 				Server:     tt.fields.Server,
 			}
@@ -100,7 +100,7 @@ func Test_restApi_validatepullRequestStatus_checkErrorMessage(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			restApi := &restApi{
+			restApi := &RestApi{
 				Connection: tt.fields.Connection,
 				Server:     tt.fields.Server,
 			}
@@ -169,7 +169,7 @@ func Test_restApi_ValidatePullRequest(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			restApi := &restApi{
+			restApi := &RestApi{
 				Connection: tt.fields.Connection,
 				Server:     tt.fields.Server,
 			}
@@ -177,5 +177,16 @@ func Test_restApi_ValidatePullRequest(t *testing.T) {
 				t.Errorf("ValidatePullRequest() error = %v, wantErr %v", err, tt.wantErr)
 			}
 		})
+	}
+}
+
+func TestRestApi_GetRouteForValidatePullRequest(t *testing.T) {
+	const want = "/api/measures/component?componentKey=%s&pullRequest=%s&metricKeys=alert_status"
+
+	restApi := &RestApi{}
+	got := restApi.GetRouteForValidatePullRequest()
+
+	if got != want {
+		t.Errorf("GetRouteForValidatePullRequest() got %s, want %s", got, want)
 	}
 }
