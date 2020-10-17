@@ -3,8 +3,7 @@ package v6
 import (
 	"net/url"
 	"sonarci/net"
-	"sonarci/net/http"
-	"sonarci/sonar"
+	connFactory "sonarci/net/factory"
 	"time"
 )
 
@@ -13,8 +12,8 @@ type RestApi struct {
 	Server string
 }
 
-func NewRestApi(server string, token string, timeout time.Duration) sonar.Api {
-	return &RestApi{Connection: http.NewConnection(server, token, timeout), Server: server}
+func NewRestApi(server string, token string, timeout time.Duration) *RestApi {
+	return &RestApi{Connection: connFactory.CreateHttpConnection(server, token, timeout)}
 }
 
 func escapeValue(value string) string {

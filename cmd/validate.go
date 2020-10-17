@@ -3,7 +3,7 @@ package cmd
 import (
 	"github.com/spf13/cobra"
 	"log"
-	"sonarci/sonar/rest/factory"
+	sonarFactory "sonarci/sonar/factory"
 )
 
 const (
@@ -68,7 +68,7 @@ func validateBranch(cmd *cobra.Command, args []string) {
 		return
 	}
 
-	api := factory.GetLatestSonarApi(pFlags.Server, pFlags.Token, pFlags.Timeout)
+	api := sonarFactory.CreateLatestSonarRestApi(pFlags.Server, pFlags.Token, pFlags.Timeout)
 	err := api.ValidateBranch(project, branch)
 	if err != nil {
 		log.Fatal(err)
@@ -88,7 +88,7 @@ func validatePullRequest(cmd *cobra.Command, args []string) {
 		return
 	}
 
-	api := factory.GetLatestSonarApi(pFlags.Server, pFlags.Token, pFlags.Timeout)
+	api := sonarFactory.CreateLatestSonarRestApi(pFlags.Server, pFlags.Token, pFlags.Timeout)
 	err := api.ValidatePullRequest(project, pr)
 	if err != nil {
 		log.Fatal(err)
