@@ -1,16 +1,21 @@
 package v7
 
 import (
+	"errors"
 	"testing"
 )
 
-func TestRestApi_GetRouteForValidateBranch(t *testing.T) {
-	const want = "/api/measures/component?component=%s&branch=%s&metricKeys=alert_status"
+func Test_ValidateBranch_CheckError(t *testing.T) {
+	restApi := NewRestApi(&mockConnection{
+		doGet: func(route string) (<-chan []byte, <-chan error) {
+			chErr := make(chan error, 1)
+			chErr <- errors.New("error-test")
+			return nil, chErr
+		},
+	})
 
-	restApi := &RestApi{}
-	got := restApi.GetRouteForValidateBranch()
-
-	if got != want {
-		t.Errorf("GetRouteForValidateBranch() got %s, want %s", got, want)
+	err := restApi.ValidateBranch("project", "branch")
+	if err == nil || err.Error() != "error-test" {
+		t.Errorf("ValidateBranch() not returned expected error")
 	}
 }

@@ -1,4 +1,4 @@
-package v6
+package base
 
 import (
 	"encoding/json"

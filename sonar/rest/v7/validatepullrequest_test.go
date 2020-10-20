@@ -1,16 +1,21 @@
 package v7
 
 import (
+	"errors"
 	"testing"
 )
 
-func TestRestApi_GetRouteForValidatePullRequest(t *testing.T) {
-	const want = "/api/measures/component?component=%s&pullRequest=%s&metricKeys=alert_status"
+func Test_ValidatePullRequest_CheckError(t *testing.T) {
+	restApi := NewRestApi(&mockConnection{
+		doGet: func(route string) (<-chan []byte, <-chan error) {
+			chErr := make(chan error, 1)
+			chErr <- errors.New("error-test")
+			return nil, chErr
+		},
+	})
 
-	restApi := &RestApi{}
-	got := restApi.GetRouteForValidatePullRequest()
-
-	if got != want {
-		t.Errorf("GetRouteForValidatePullRequest() got %s, want %s", got, want)
+	err := restApi.ValidatePullRequest("project", "pull-request")
+	if err == nil || err.Error() != "error-test" {
+		t.Errorf("ValidatePullRequest() not returned expected error")
 	}
 }

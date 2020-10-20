@@ -2,15 +2,23 @@ package v8
 
 import (
 	"testing"
-	"time"
 )
 
-func Test_NewRestApi(t *testing.T) {
-	const server = "server"
-	const token = "token"
-	timeout := time.Duration(1)
+type mockConnection struct {
+	hostServer string
+	doGet      func(route string) (<-chan []byte, <-chan error)
+}
 
-	if got := NewRestApi(server, token, timeout); got == nil {
+func (connection *mockConnection) GetHostServer() string {
+	return connection.hostServer
+}
+
+func (connection *mockConnection) DoGet(route string) (<-chan []byte, <-chan error) {
+	return connection.doGet(route)
+}
+
+func Test_NewRestApi(t *testing.T) {
+	if got := NewRestApi(&mockConnection{}); got == nil {
 		t.Errorf("NewRestApi() return nil")
 	}
 }

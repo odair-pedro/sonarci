@@ -3,7 +3,6 @@ package cmd
 import (
 	"github.com/spf13/cobra"
 	"log"
-	sonarFactory "sonarci/sonar/factory"
 	"strings"
 )
 
@@ -38,7 +37,7 @@ func search(cmd *cobra.Command, args []string) {
 		return
 	}
 
-	api := sonarFactory.CreateLatestSonarRestApi(pFlags.Server, pFlags.Token, pFlags.Timeout)
+	api := createSonarApi(pFlags.Server, pFlags.Token, pFlags.Timeout)
 	results, err := api.SearchProjects(projects)
 	if err != nil {
 		log.Fatal("Failure to search projects: ", err)

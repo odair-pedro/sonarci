@@ -1,5 +1,7 @@
 package v7
 
-func (restApi *RestApi) GetRouteForValidateBranch() string {
-	return "/api/measures/component?component=%s&branch=%s&metricKeys=alert_status"
+const routeBranchValidation = "/api/measures/component?component=%s&branch=%s&metricKeys=alert_status"
+
+func (restApi *RestApi) ValidateBranch(project string, branch string) error {
+	return restApi.ValidateBranchInternal(routeBranchValidation, project, branch)
 }
