@@ -1,4 +1,4 @@
-package sonarrestapi
+package base
 
 import (
 	"encoding/json"
@@ -7,7 +7,7 @@ import (
 
 const routeSearchProjects = "/api/projects/search?projects="
 
-func (restApi *restApi) SearchProjects(projects string) (<-chan sonar.Project, error) {
+func (restApi *RestApi) SearchProjects(projects string) (<-chan sonar.Project, error) {
 	chBuff, chErr := restApi.DoGet(routeSearchProjects + projects)
 	err := <-chErr
 	if err != nil {

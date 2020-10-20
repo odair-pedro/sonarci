@@ -4,10 +4,9 @@ import (
 	"testing"
 )
 
-func TestSetVersion(t *testing.T) {
-	const version = "1.0"
-	SetVersion(version)
-	if rootCmd.Version != version {
-		t.Errorf("Version %s has not been defined", version)
+func Test_NewRootCmd_CheckReturn(t *testing.T) {
+	cmd := NewRootCmd()
+	if cmd == nil {
+		t.Errorf("NewRootCmd() = nil")
 	}
 }

@@ -14,8 +14,9 @@ func main() {
 }
 
 func startRootCommand() {
-	cmd.SetVersion(version)
-	if err := cmd.Execute(); err != nil {
+	rootCmd := cmd.NewRootCmd()
+	rootCmd.Version = version
+	if err := rootCmd.Execute(); err != nil {
 		log.Fatalln(err.Error())
 	}
 }

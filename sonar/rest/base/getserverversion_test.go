@@ -1,4 +1,4 @@
-package sonarrestapi
+package base
 
 import (
 	"errors"
@@ -22,7 +22,6 @@ func Test_restApi_GetServerVersion(t *testing.T) {
 
 	type fields struct {
 		Connection net.Connection
-		Server     string
 	}
 	tests := []struct {
 		name    string
@@ -30,15 +29,12 @@ func Test_restApi_GetServerVersion(t *testing.T) {
 		want    string
 		wantErr bool
 	}{
-		{"success", fields{Connection: mockVersion, Server: "http://server"}, "1.0", false},
-		{"error", fields{Connection: mockError, Server: "http://server"}, "", true},
+		{"success", fields{Connection: mockVersion}, "1.0", false},
+		{"error", fields{Connection: mockError}, "", true},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			restApi := &restApi{
-				Connection: tt.fields.Connection,
-				Server:     tt.fields.Server,
-			}
+			restApi := NewRestApi(tt.fields.Connection)
 			got, err := restApi.GetServerVersion()
 			if (err != nil) != tt.wantErr {
 				t.Errorf("GetServerVersion() error = %v, wantErr %v", err, tt.wantErr)

@@ -1,4 +1,4 @@
-package sonarrestapi
+package base
 
 import (
 	"encoding/json"
@@ -58,7 +58,6 @@ func Test_restApi_SearchProjects(t *testing.T) {
 
 	type fields struct {
 		Connection net.Connection
-		Server     string
 	}
 	type args struct {
 		projects string
@@ -70,18 +69,15 @@ func Test_restApi_SearchProjects(t *testing.T) {
 		want    sonar.Project
 		wantErr bool
 	}{
-		{"ok", fields{Connection: mockOk, Server: "http://server"}, args{projects: "project"}, sonar.Project{Id: "id", Organization: "org", Key: "key", Name: "name", Visibility: "visibility"}, false},
-		{"components-nil", fields{Connection: mockComponentsNil, Server: "http://server"}, args{projects: "project"}, sonar.Project{}, false},
-		{"components-empty", fields{Connection: mockComponentsEmpty, Server: "http://server"}, args{projects: "project"}, sonar.Project{}, false},
-		{"invalid-json", fields{Connection: mockInvalidJson, Server: "http://server"}, args{projects: "project"}, sonar.Project{}, true},
-		{"error", fields{Connection: mockError, Server: "http://server"}, args{projects: "project"}, sonar.Project{}, true},
+		{"ok", fields{Connection: mockOk}, args{projects: "project"}, sonar.Project{Id: "id", Organization: "org", Key: "key", Name: "name", Visibility: "visibility"}, false},
+		{"components-nil", fields{Connection: mockComponentsNil}, args{projects: "project"}, sonar.Project{}, false},
+		{"components-empty", fields{Connection: mockComponentsEmpty}, args{projects: "project"}, sonar.Project{}, false},
+		{"invalid-json", fields{Connection: mockInvalidJson}, args{projects: "project"}, sonar.Project{}, true},
+		{"error", fields{Connection: mockError}, args{projects: "project"}, sonar.Project{}, true},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			restApi := &restApi{
-				Connection: tt.fields.Connection,
-				Server:     tt.fields.Server,
-			}
+			restApi := NewRestApi(tt.fields.Connection)
 			chGot, err := restApi.SearchProjects(tt.args.projects)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("SearchProjects() error = %v, wantErr %v", err, tt.wantErr)
