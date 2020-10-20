@@ -41,3 +41,16 @@ func Test_isStatusSuccess(t *testing.T) {
 		})
 	}
 }
+
+func TestConnection_GetHostServer(t *testing.T) {
+	const hostServer = "host-server"
+
+	connection := &Connection{
+		HostServer: hostServer,
+	}
+
+	got := connection.GetHostServer()
+	if got != hostServer {
+		t.Errorf("GetHostServer() = %v, want %v", got, hostServer)
+	}
+}
