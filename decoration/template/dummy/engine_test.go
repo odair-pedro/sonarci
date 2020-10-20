@@ -1,4 +1,4 @@
-package dummyengine
+package dummy
 
 import "testing"
 

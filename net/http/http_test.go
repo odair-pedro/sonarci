@@ -42,7 +42,7 @@ func Test_isStatusSuccess(t *testing.T) {
 	}
 }
 
-func TestConnection_GetHostServer(t *testing.T) {
+func Test_Connection_GetHostServer(t *testing.T) {
 	const hostServer = "host-server"
 
 	connection := &Connection{
