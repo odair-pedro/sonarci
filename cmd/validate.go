@@ -1,8 +1,13 @@
 package cmd
 
 import (
+	"fmt"
 	"github.com/spf13/cobra"
 	"log"
+	"os"
+	"sonarci/sonar"
+	"strconv"
+	"strings"
 )
 
 const (
@@ -68,10 +73,13 @@ func validateBranch(cmd *cobra.Command, args []string) {
 	}
 
 	api := createSonarApi(pFlags.Server, pFlags.Token, pFlags.Timeout)
-	err := api.ValidateBranch(project, branch)
+
+	qualityGate, err := api.GetBranchQualityGate(project, branch)
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	checkQualityGate(qualityGate)
 }
 
 func validatePullRequest(cmd *cobra.Command, args []string) {
@@ -88,8 +96,74 @@ func validatePullRequest(cmd *cobra.Command, args []string) {
 	}
 
 	api := createSonarApi(pFlags.Server, pFlags.Token, pFlags.Timeout)
-	err := api.ValidatePullRequest(project, pr)
+
+	qualityGate, err := api.GetPullRequestQualityGate(project, pr)
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	checkQualityGate(qualityGate)
+}
+
+func checkQualityGate(qualityGate sonar.QualityGate) {
+	const banner = " ____                            ____ ___ \n" +
+		"/ ___|  ___  _ __   __ _ _ __   / ___|_ _|\n" +
+		"\\___ \\ / _ \\| '_ \\ / _  | '__| | |    | | \n" +
+		" ___) | (_) | | | | (_| | |    | |___ | | \n" +
+		"|____/ \\___/|_| |_|\\__,_|_|     \\____|___|\n\n"
+
+	log.Print(banner)
+	log.Println(genQualityReport(qualityGate))
+	log.Printf("\nSee more details in %s", qualityGate.LinkDetail)
+
+	if !qualityGate.HasPassed() {
+		os.Exit(1)
+	}
+}
+
+func genQualityReport(qualityGate sonar.QualityGate) string {
+	const (
+		metricColW     = 28
+		comparatorColW = 10
+		errorColW      = 15
+		valueColW      = 12
+		statusColW     = 6
+	)
+
+	header := "+------------------------------+------------+-----------------+--------------+--------+\n" +
+		"| METRIC                       | COMPARATOR | ERROR THRESHOLD | ACTUAL VALUE | STATUS |\n" +
+		"+------------------------------+------------+-----------------+--------------+--------+\n"
+	footer := "+------------------------------+------------+-----------------+--------------+--------+\n" +
+		fmt.Sprintf("|                              |            |                 | QUALITY GATE | %s |\n",
+			colorful(qualityGate.Status, padRight(qualityGate.Status, " ", statusColW))) +
+		"+------------------------------+------------+-----------------+--------------+--------+"
+
+	var rows string
+	for _, metric := range qualityGate.Conditions {
+		rows += fmt.Sprintf("| %s | %s | %s | %s | %s |\n",
+			colorful(metric.Status, padRight(metric.Description, " ", metricColW)),
+			colorful(metric.Status, padRight(metric.Comparator, " ", comparatorColW)),
+			colorful(metric.Status, padRight(strconv.FormatFloat(float64(metric.ErrorThreshold), 'f', 5, 32), " ", errorColW)),
+			colorful(metric.Status, padRight(strconv.FormatFloat(float64(metric.Value), 'f', 5, 32), " ", valueColW)),
+			colorful(metric.Status, padRight(metric.Status, " ", statusColW)))
+	}
+
+	return header + rows + footer
+}
+
+func colorful(status string, value string) string {
+	const (
+		colorReset = "\033[0m"
+		colorRed   = "\033[31m"
+		colorGreen = "\033[32m"
+	)
+
+	status = strings.ToUpper(strings.Trim(status, " "))
+	if status == "OK" {
+		return fmt.Sprint(colorGreen, value, colorReset)
+	}
+	if status == "ERROR" {
+		return fmt.Sprint(colorRed, value, colorReset)
+	}
+	return value
 }

@@ -63,7 +63,9 @@ func (wrapper qualityGateWrapper) convert() sonar.QualityGate {
 	}
 
 	for _, condition := range wrapper.QualityGate.Conditions {
-		result.Conditions[condition.MetricKey] = condition.convert()
+		if conditionNames[condition.MetricKey] != "" {
+			result.Conditions[condition.MetricKey] = condition.convert()
+		}
 	}
 
 	return result
