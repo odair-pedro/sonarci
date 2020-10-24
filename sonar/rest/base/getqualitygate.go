@@ -20,7 +20,7 @@ func (restApi *RestApi) GetPullRequestQualityGate(project string, pullRequest st
 }
 
 func (restApi *RestApi) getQualityGate(project string, filter string, value string) (sonar.QualityGate, error) {
-	chBuff, chErr := restApi.DoGet(fmt.Sprintf(routeQualityGate, project, filter, value))
+	chBuff, chErr := restApi.Request(fmt.Sprintf(routeQualityGate, project, filter, value))
 	err := <-chErr
 	if err != nil {
 		return sonar.QualityGate{}, err
@@ -72,6 +72,7 @@ func (wrapper qualityGateWrapper) convert() sonar.QualityGate {
 var conditionNames = map[string]string{
 	"new_reliability_rating":       "New Reliability Rating",
 	"new_security_rating":          "New Security Rating",
+	"new_vulnerabilities":          "New Vulnerabilities",
 	"new_maintainability_rating":   "New Maintainability Rating",
 	"new_coverage":                 "New Coverage",
 	"new_duplicated_lines_density": "New Duplicated Lines Density",

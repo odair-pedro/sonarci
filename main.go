@@ -16,7 +16,8 @@ func main() {
 
 	api := base.NewRestApi(http.NewConnection("https://sonarqube.ambevdevs.com.br", "00500edbf41ebdc63f48646a5e86562fcc0b9692", time.Second*30))
 	result, _ := api.GetPullRequestQualityGate("ambev-franqueado-gaming-server", "23195")
-	_ = result
+	log.Println(result.Status)
+	log.Println(result.LinkDetail)
 }
 
 func startRootCommand() {

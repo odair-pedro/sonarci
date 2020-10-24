@@ -26,7 +26,7 @@ func (connection *Connection) GetHostServer() string {
 	return connection.HostServer
 }
 
-func (connection *Connection) DoGet(route string) (<-chan []byte, <-chan error) {
+func (connection *Connection) Request(endpoint string) (<-chan []byte, <-chan error) {
 	chOut := make(chan []byte, 1)
 	chErr := make(chan error, 1)
 
@@ -36,7 +36,7 @@ func (connection *Connection) DoGet(route string) (<-chan []byte, <-chan error) 
 
 		client := &http.Client{Timeout: connection.Timeout}
 
-		url := fmt.Sprintf("%s/%s", strings.TrimRight(connection.HostServer, "/"), strings.TrimLeft(route, "/"))
+		url := fmt.Sprintf("%s/%s", strings.TrimRight(connection.HostServer, "/"), strings.TrimLeft(endpoint, "/"))
 		req, err := http.NewRequest("GET", url, nil)
 		if err != nil {
 			chErr <- err
