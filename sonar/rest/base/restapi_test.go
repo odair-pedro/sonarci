@@ -17,10 +17,6 @@ func (connection *mockConnection) Request(endpoint string) (<-chan []byte, <-cha
 	return connection.request(endpoint)
 }
 
-func (connection *mockConnection) Send(_ []byte, _ string) (<-chan []byte, <-chan error) {
-	return nil, nil
-}
-
 func Test_NewRestApi(t *testing.T) {
 	if got := NewRestApi(&mockConnection{}); got == nil {
 		t.Errorf("NewRestApi() return nil")

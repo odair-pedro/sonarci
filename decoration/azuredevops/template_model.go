@@ -1,25 +1,10 @@
 package azuredevops
 
 import (
-	"sonarci/decoration/template"
 	"sonarci/sonar"
 	"strconv"
 	"strings"
 )
-
-const Server = "https://dev.azure.com"
-const routeCommentPullRequest = "%s/_apis/git/repositories/%s/pullRequests/%s/threads?api-version=6.0"
-
-func (decorator *PullRequestDecorator) CommentQualityGate(qualityGate sonar.QualityGate) error {
-	model := parseCommentModel(qualityGate)
-	report, err := decorator.ProcessTemplate(template.ReportTemplate, model)
-	if err != nil {
-		return err
-	}
-
-	_ = report
-	return nil
-}
 
 const (
 	keyNewReliabilityRating      = "new_reliability_rating"
@@ -29,7 +14,7 @@ const (
 	keyNewDuplicatedLinesDensity = "new_duplicated_lines_density"
 )
 
-type commentModel struct {
+type templateModel struct {
 	host                       string `dummy:"host"`
 	project                    string `dummy:"project"`
 	pullRequest                string `dummy:"pullrequest"`
@@ -49,14 +34,14 @@ type commentModel struct {
 	maintainabilityStatusColor string `dummy:"mtb-status-color"`
 }
 
-func parseCommentModel(qualityGate sonar.QualityGate) commentModel {
+func parseTemplateModel(qualityGate sonar.QualityGate) templateModel {
 	cov := qualityGate.Conditions[keyNewCoverage]
 	dup := qualityGate.Conditions[keyNewDuplicatedLinesDensity]
 	rel := qualityGate.Conditions[keyNewReliabilityRating]
 	sec := qualityGate.Conditions[keyNewSecurityRating]
 	mtb := qualityGate.Conditions[keyNewMaintainabilityRating]
 
-	return commentModel{
+	return templateModel{
 		host:                       qualityGate.Host,
 		project:                    qualityGate.Project,
 		pullRequest:                qualityGate.Source,

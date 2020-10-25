@@ -2,14 +2,14 @@ package base
 
 import (
 	"net/url"
-	"sonarci/net"
+	"sonarci/sonar"
 )
 
 type RestApi struct {
-	net.Connection
+	sonar.Connection
 }
 
-func NewRestApi(connection net.Connection) *RestApi {
+func NewRestApi(connection sonar.Connection) *RestApi {
 	return &RestApi{connection}
 }
 

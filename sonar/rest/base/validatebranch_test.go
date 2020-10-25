@@ -3,13 +3,13 @@ package base
 import (
 	"encoding/json"
 	"errors"
-	"sonarci/net"
+	"sonarci/sonar"
 	"testing"
 )
 
 func Test_restApi_validateBranchStatus_checkError(t *testing.T) {
 	type fields struct {
-		Connection net.Connection
+		Connection sonar.Connection
 	}
 	type args struct {
 		status branchStatus
@@ -57,7 +57,7 @@ func Test_restApi_validateBranchStatus_checkError(t *testing.T) {
 
 func Test_restApi_validateBranchStatus_checkErrorMessage(t *testing.T) {
 	type fields struct {
-		Connection net.Connection
+		Connection sonar.Connection
 	}
 	type args struct {
 		status branchStatus
@@ -141,7 +141,7 @@ func Test_restApi_ValidateBranchInternal(t *testing.T) {
 	}}
 
 	type fields struct {
-		Connection net.Connection
+		Connection sonar.Connection
 	}
 	type args struct {
 		routeApi string

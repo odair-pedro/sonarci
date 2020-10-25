@@ -3,7 +3,7 @@ package cmd
 import (
 	"fmt"
 	"github.com/spf13/cobra"
-	connFactory "sonarci/net/factory"
+	"sonarci/connection/http"
 	"sonarci/sonar"
 	sonarFactory "sonarci/sonar/factory"
 	"time"
@@ -38,6 +38,6 @@ func NewRootCmd() *cobra.Command {
 }
 
 func createSonarApi(server string, token string, timeout time.Duration) sonar.Api {
-	conn := connFactory.CreateHttpConnection(server, token, timeout)
+	conn := http.NewConnection(server, token, timeout)
 	return sonarFactory.CreateSonarApi(conn)
 }

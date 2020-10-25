@@ -3,7 +3,6 @@ package base
 import (
 	"encoding/json"
 	"errors"
-	"sonarci/net"
 	"sonarci/sonar"
 	"testing"
 )
@@ -57,7 +56,7 @@ func Test_restApi_SearchProjects(t *testing.T) {
 	}}
 
 	type fields struct {
-		Connection net.Connection
+		Connection sonar.Connection
 	}
 	type args struct {
 		projects string

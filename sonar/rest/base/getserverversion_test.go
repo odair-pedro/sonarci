@@ -2,7 +2,7 @@ package base
 
 import (
 	"errors"
-	"sonarci/net"
+	"sonarci/sonar"
 	"testing"
 )
 
@@ -21,7 +21,7 @@ func Test_restApi_GetServerVersion(t *testing.T) {
 	}}
 
 	type fields struct {
-		Connection net.Connection
+		Connection sonar.Connection
 	}
 	tests := []struct {
 		name    string

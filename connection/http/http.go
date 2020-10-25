@@ -54,7 +54,6 @@ func (connection *Connection) Request(endpoint string) (<-chan []byte, <-chan er
 		defer closeResource(resp.Body)
 		if !isStatusSuccess(resp.StatusCode) {
 			chErr <- errors.New("Failed request. Status Code: " + resp.Status)
-			return
 		}
 
 		buff, err := ioutil.ReadAll(resp.Body)
@@ -69,7 +68,7 @@ func (connection *Connection) Request(endpoint string) (<-chan []byte, <-chan er
 	return chOut, chErr
 }
 
-func (connection *Connection) Send(data []byte, endpoint string) (<-chan []byte, <-chan error) {
+func (connection *Connection) Send(endpoint string, content []byte, contentType string) (<-chan []byte, <-chan error) {
 	chOut := make(chan []byte, 1)
 	chErr := make(chan error, 1)
 
@@ -80,13 +79,14 @@ func (connection *Connection) Send(data []byte, endpoint string) (<-chan []byte,
 		client := &http.Client{Timeout: connection.Timeout}
 
 		url := parseUrl(connection.GetHostServer(), endpoint)
-		req, err := http.NewRequest("POST", url, bytes.NewReader(data))
+		req, err := http.NewRequest("POST", url, bytes.NewReader(content))
 		if err != nil {
 			chErr <- err
 			return
 		}
 
 		req.Header.Add("Authorization", "Basic "+encodeToken(connection.Token))
+		req.Header.Add("Content-Type", contentType)
 		resp, err := client.Do(req)
 		if err != nil {
 			chErr <- err
@@ -96,7 +96,6 @@ func (connection *Connection) Send(data []byte, endpoint string) (<-chan []byte,
 		defer closeResource(resp.Body)
 		if !isStatusSuccess(resp.StatusCode) {
 			chErr <- errors.New("Failed request. Status Code: " + resp.Status)
-			return
 		}
 
 		buff, err := ioutil.ReadAll(resp.Body)
