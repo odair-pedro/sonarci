@@ -6,6 +6,7 @@ import (
 	"log"
 	"os"
 	"sonarci/sonar"
+	"sort"
 	"strconv"
 	"strings"
 )
@@ -138,8 +139,15 @@ func genQualityReport(qualityGate sonar.QualityGate) string {
 			colorful(qualityGate.Status, padRight(qualityGate.Status, " ", statusColW))) +
 		"+------------------------------+------------+-----------------+--------------+--------+"
 
+	keys := make([]string, 0)
+	for k := range qualityGate.Conditions {
+		keys = append(keys, k)
+	}
+
+	sort.Strings(keys)
 	var rows string
-	for _, metric := range qualityGate.Conditions {
+	for _, key := range keys {
+		metric := qualityGate.Conditions[key]
 		rows += fmt.Sprintf("| %s | %s | %s | %s | %s |\n",
 			colorful(metric.Status, padRight(metric.Description, " ", metricColW)),
 			colorful(metric.Status, padRight(metric.Comparator, " ", comparatorColW)),

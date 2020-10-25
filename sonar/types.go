@@ -11,6 +11,10 @@ type Project struct {
 }
 
 type QualityGate struct {
+	Host       string
+	Project    string
+	Source     string
+	SourceType string
 	Status     string
 	LinkDetail string
 	Conditions map[string]QualityGateCondition

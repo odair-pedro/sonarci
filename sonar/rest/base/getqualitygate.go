@@ -3,13 +3,16 @@ package base
 import (
 	"encoding/json"
 	"fmt"
+	"regexp"
 	"sonarci/sonar"
 	"strconv"
 	"strings"
 )
 
-const routeQualityGate = "api/qualitygates/project_status?projectKey=%s&%s=%s"
-const routeQualityGateDetails = "/dashboard?id=%s&%s=%s"
+const (
+	routeQualityGate        = "api/qualitygates/project_status?projectKey=%s&%s=%s"
+	routeQualityGateDetails = "/dashboard?id=%s&%s=%s"
+)
 
 func (restApi *RestApi) GetBranchQualityGate(project string, branch string) (sonar.QualityGate, error) {
 	return restApi.getQualityGate(project, "branch", branch)
@@ -19,8 +22,8 @@ func (restApi *RestApi) GetPullRequestQualityGate(project string, pullRequest st
 	return restApi.getQualityGate(project, "pullRequest", pullRequest)
 }
 
-func (restApi *RestApi) getQualityGate(project string, filter string, value string) (sonar.QualityGate, error) {
-	chBuff, chErr := restApi.Request(fmt.Sprintf(routeQualityGate, project, filter, value))
+func (restApi *RestApi) getQualityGate(project string, sourceType string, source string) (sonar.QualityGate, error) {
+	chBuff, chErr := restApi.Request(fmt.Sprintf(routeQualityGate, project, sourceType, source))
 	err := <-chErr
 	if err != nil {
 		return sonar.QualityGate{}, err
@@ -34,8 +37,13 @@ func (restApi *RestApi) getQualityGate(project string, filter string, value stri
 	}
 
 	qualityGate := wrapper.convert()
+	qualityGate.Host = restApi.GetHostServer()
+	qualityGate.Project = project
+	qualityGate.Source = source
+	qualityGate.SourceType = sourceType
+
 	qualityGate.LinkDetail = strings.TrimRight(restApi.GetHostServer(), "/") +
-		fmt.Sprintf(routeQualityGateDetails, escapeValue(project), escapeValue(filter), escapeValue(value))
+		fmt.Sprintf(routeQualityGateDetails, escapeValue(project), escapeValue(sourceType), escapeValue(source))
 	return qualityGate, nil
 }
 
@@ -63,21 +71,10 @@ func (wrapper qualityGateWrapper) convert() sonar.QualityGate {
 	}
 
 	for _, condition := range wrapper.QualityGate.Conditions {
-		if conditionNames[condition.MetricKey] != "" {
-			result.Conditions[condition.MetricKey] = condition.convert()
-		}
+		result.Conditions[condition.MetricKey] = condition.convert()
 	}
 
 	return result
-}
-
-var conditionNames = map[string]string{
-	"new_reliability_rating":       "New Reliability Rating",
-	"new_security_rating":          "New Security Rating",
-	"new_vulnerabilities":          "New Vulnerabilities",
-	"new_maintainability_rating":   "New Maintainability Rating",
-	"new_coverage":                 "New Coverage",
-	"new_duplicated_lines_density": "New Duplicated Lines Density",
 }
 
 func (condition qualityGateCondition) convert() sonar.QualityGateCondition {
@@ -86,9 +83,16 @@ func (condition qualityGateCondition) convert() sonar.QualityGateCondition {
 
 	return sonar.QualityGateCondition{
 		Status:         condition.Status,
-		Description:    conditionNames[condition.MetricKey],
+		Description:    parseMetricKeyInDescription(condition.MetricKey),
 		Value:          float32(value),
 		ErrorThreshold: float32(errorThreshold),
 		Comparator:     condition.Comparator,
 	}
+}
+
+func parseMetricKeyInDescription(metricKey string) string {
+	rg := regexp.MustCompile(`^.|(_.)+`)
+	return rg.ReplaceAllStringFunc(metricKey, func(s string) string {
+		return strings.ToUpper(strings.Replace(s, "_", " ", -1))
+	})
 }
