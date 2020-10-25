@@ -38,6 +38,6 @@ func NewRootCmd() *cobra.Command {
 }
 
 func createSonarApi(server string, token string, timeout time.Duration) sonar.Api {
-	conn := connFactory.CreateConnection(server, token, timeout)
+	conn := connFactory.CreateHttpConnection(server, token, timeout)
 	return sonarFactory.CreateSonarApi(conn)
 }

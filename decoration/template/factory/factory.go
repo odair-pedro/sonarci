@@ -5,6 +5,6 @@ import (
 	"sonarci/decoration/template/dummy"
 )
 
-func CreateTemplateEngine() template.Engine {
+func CreateDummyTemplateEngine() template.Engine {
 	return dummy.NewEngine()
 }

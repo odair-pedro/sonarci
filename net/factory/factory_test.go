@@ -6,8 +6,8 @@ import (
 	"time"
 )
 
-func Test_CreateConnection_CheckReturn(t *testing.T) {
-	api := CreateConnection("server", "token", time.Second)
+func Test_CreateHttpConnection_CheckReturn(t *testing.T) {
+	api := CreateHttpConnection("server", "token", time.Second)
 
 	switch tp := api.(type) {
 	case *http.Connection:

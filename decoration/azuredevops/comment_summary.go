@@ -7,6 +7,9 @@ import (
 	"strings"
 )
 
+const Server = "https://dev.azure.com"
+const routeCommentPullRequest = "%s/_apis/git/repositories/%s/pullRequests/%s/threads?api-version=6.0"
+
 func (decorator *PullRequestDecorator) CommentQualityGate(qualityGate sonar.QualityGate) error {
 	model := parseCommentModel(qualityGate)
 	report, err := decorator.ProcessTemplate(template.ReportTemplate, model)

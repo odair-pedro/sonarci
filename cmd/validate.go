@@ -5,16 +5,25 @@ import (
 	"github.com/spf13/cobra"
 	"log"
 	"os"
+	decorationFactory "sonarci/decoration/factory"
+	templateFactory "sonarci/decoration/template/factory"
 	"sonarci/sonar"
 	"sort"
 	"strconv"
 	"strings"
+	"time"
 )
 
 const (
 	flagProject      = "project"
 	flagProjectShort = "p"
 	flagProjectUsage = "SonarQube projects key"
+)
+
+const (
+	flagDecorate      = "decorate"
+	flagDecorateShort = "d"
+	flagDecorateUsage = "Decorate a pull request with quality gate results"
 )
 
 func NewValidateCmd() *cobra.Command {
@@ -55,6 +64,7 @@ func newPullRequestCmd() *cobra.Command {
 	}
 
 	pullRequestCmd.Flags().StringP(flagProject, flagProjectShort, "", flagProjectUsage)
+	pullRequestCmd.Flags().BoolP(flagDecorate, flagDecorateShort, false, flagDecorateUsage)
 	_ = pullRequestCmd.MarkFlagRequired(flagProject)
 
 	return pullRequestCmd
@@ -103,7 +113,57 @@ func validatePullRequest(cmd *cobra.Command, args []string) {
 		log.Fatal(err)
 	}
 
+	decorate, _ := cmd.Flags().GetBool(flagDecorate)
+	if decorate {
+		decoratePullRequest(qualityGate, pFlags.Timeout)
+	}
+
 	checkQualityGate(qualityGate)
+}
+
+func decoratePullRequest(qualityGate sonar.QualityGate, timeout time.Duration) {
+	const (
+		decoratorTypeEnv = "SONARCI_DECORATION_TYPE"
+		projectEnv       = "SONARCI_DECORATION_PROJECT"
+		repositoryEnv    = "SONARCI_DECORATION_REPOSITORY"
+		tokenEnv         = "SONARCI_DECORATION_TOKEN"
+	)
+
+	decoratorType := os.Getenv(decoratorTypeEnv)
+	if decoratorType == "" {
+		log.Printf("Failed decoration, decorator type has not been found")
+		return
+	}
+
+	project := os.Getenv(projectEnv)
+	if project == "" {
+		log.Printf("Failed decoration, project information has not been found")
+		return
+	}
+
+	repository := os.Getenv(repositoryEnv)
+	if repository == "" {
+		log.Printf("Failed decoration, repository information has not been found")
+		return
+	}
+
+	token := os.Getenv(tokenEnv)
+	if token == "" {
+		log.Printf("Failed decoration, token information has not been found")
+		return
+	}
+
+	engine := templateFactory.CreateDummyTemplateEngine()
+	decorator, err := decorationFactory.CreatePullRequestDecorator(decoratorType, project, repository, token, timeout, engine)
+	if err != nil {
+		log.Printf(err.Error())
+		return
+	}
+
+	err = decorator.CommentQualityGate(qualityGate)
+	if err != nil {
+		log.Printf(err.Error())
+	}
 }
 
 func checkQualityGate(qualityGate sonar.QualityGate) {

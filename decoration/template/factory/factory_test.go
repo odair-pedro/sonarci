@@ -5,8 +5,8 @@ import (
 	"testing"
 )
 
-func Test_CreateTemplateEngine_CheckReturn(t *testing.T) {
-	api := CreateTemplateEngine()
+func Test_CreateDummyTemplateEngine_CheckReturn(t *testing.T) {
+	api := CreateDummyTemplateEngine()
 
 	switch tp := api.(type) {
 	case *dummy.Engine:
