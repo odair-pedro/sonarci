@@ -3,13 +3,13 @@ package base
 import (
 	"encoding/json"
 	"errors"
-	"sonarci/net"
+	"sonarci/sonar"
 	"testing"
 )
 
 func Test_restApi_validatePullRequestStatus_checkError(t *testing.T) {
 	type fields struct {
-		Connection net.Connection
+		Connection sonar.Connection
 	}
 	type args struct {
 		status pullRequestStatus
@@ -57,7 +57,7 @@ func Test_restApi_validatePullRequestStatus_checkError(t *testing.T) {
 
 func Test_restApi_validatePullRequestStatus_checkErrorMessage(t *testing.T) {
 	type fields struct {
-		Connection net.Connection
+		Connection sonar.Connection
 	}
 	type args struct {
 		status pullRequestStatus
@@ -104,7 +104,7 @@ func Test_restApi_validatePullRequestStatus_checkErrorMessage(t *testing.T) {
 }
 
 func Test_restApi_ValidatePullRequestInternal(t *testing.T) {
-	mockOk := &mockConnection{hostServer: "http://server", doGet: func(route string) (<-chan []byte, <-chan error) {
+	mockOk := &mockConnection{hostServer: "http://server", request: func(route string) (<-chan []byte, <-chan error) {
 		bStatus := pullRequestStatusWrapper{Component: pullRequestStatus{Measures: []pullRequestStatusMeasure{{Value: "OK"}}, PullRequest: "pullRequest", Project: "project"}}
 		buff, _ := json.Marshal(bStatus)
 
@@ -115,12 +115,12 @@ func Test_restApi_ValidatePullRequestInternal(t *testing.T) {
 		chErr <- nil
 		return chOk, chErr
 	}}
-	mockError := &mockConnection{hostServer: "http://server", doGet: func(route string) (<-chan []byte, <-chan error) {
+	mockError := &mockConnection{hostServer: "http://server", request: func(route string) (<-chan []byte, <-chan error) {
 		chError := make(chan error, 1)
 		chError <- errors.New("failure")
 		return nil, chError
 	}}
-	mockErrorStatus := &mockConnection{hostServer: "http://server", doGet: func(route string) (<-chan []byte, <-chan error) {
+	mockErrorStatus := &mockConnection{hostServer: "http://server", request: func(route string) (<-chan []byte, <-chan error) {
 		bStatus := &pullRequestStatus{Measures: []pullRequestStatusMeasure{{Value: "ERROR"}}, PullRequest: "pullRequest", Project: "project"}
 		buff, _ := json.Marshal(bStatus)
 
@@ -131,7 +131,7 @@ func Test_restApi_ValidatePullRequestInternal(t *testing.T) {
 		chErr <- nil
 		return chOk, chErr
 	}}
-	mockInvalidJson := &mockConnection{hostServer: "http://server", doGet: func(route string) (<-chan []byte, <-chan error) {
+	mockInvalidJson := &mockConnection{hostServer: "http://server", request: func(route string) (<-chan []byte, <-chan error) {
 		chOk := make(chan []byte, 1)
 		chOk <- []byte{}
 
@@ -141,7 +141,7 @@ func Test_restApi_ValidatePullRequestInternal(t *testing.T) {
 	}}
 
 	type fields struct {
-		Connection net.Connection
+		Connection sonar.Connection
 	}
 	type args struct {
 		routeApi    string

@@ -1,21 +1,19 @@
-package dummyengine
+package dummy
 
 import (
 	"errors"
 	"reflect"
 	"regexp"
-	"sonarci/decoration/template"
 )
 
-type dummyEngine struct {
-	template string
+type Engine struct {
 }
 
-func NewEngine() template.Engine {
-	return &dummyEngine{}
+func NewEngine() *Engine {
+	return &Engine{}
 }
 
-func (eng *dummyEngine) ProcessTemplate(template string, dataSource interface{}) (string, error) {
+func (eng *Engine) ProcessTemplate(template string, dataSource interface{}) (string, error) {
 	if template == "" {
 		return "", errors.New("invalid template")
 	}
@@ -23,22 +21,20 @@ func (eng *dummyEngine) ProcessTemplate(template string, dataSource interface{})
 		return "", errors.New("invalid data source")
 	}
 
-	eng.template = template
-	return eng.processDataSource(dataSource)
+	return eng.processDataSource(template, dataSource)
 }
 
-func (eng *dummyEngine) processDataSource(dataSource interface{}) (string, error) {
+func (eng *Engine) processDataSource(template string, dataSource interface{}) (string, error) {
 	v := reflect.ValueOf(dataSource)
 	if v.Kind() != reflect.Struct {
 		return "", errors.New("invalid data source, it is not a struct")
 	}
 
 	t := reflect.TypeOf(dataSource)
-	result := eng.template
 	for i := 0; i < v.NumField(); i++ {
-		result = processDataSourceField(t.Field(i).Tag.Get("dummy"), v.Field(i).String(), result)
+		template = processDataSourceField(t.Field(i).Tag.Get("dummy"), v.Field(i).String(), template)
 	}
-	return result, nil
+	return template, nil
 }
 
 func processDataSourceField(name string, value string, template string) string {

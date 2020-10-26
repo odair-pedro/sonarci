@@ -22,7 +22,7 @@ curl -sSL https://raw.githubusercontent.com/odair-pedro/sonarci/master/install-l
 Those who want to install from source code may use the following command (on root directory):
 
 ``` 
-make build
+make install
 ``` 
 
 ###### Note: SonarCI will be installed on current directory

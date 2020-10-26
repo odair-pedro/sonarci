@@ -6,15 +6,15 @@ import (
 
 type mockConnection struct {
 	hostServer string
-	doGet      func(route string) (<-chan []byte, <-chan error)
+	request    func(route string) (<-chan []byte, <-chan error)
 }
 
 func (connection *mockConnection) GetHostServer() string {
 	return connection.hostServer
 }
 
-func (connection *mockConnection) DoGet(route string) (<-chan []byte, <-chan error) {
-	return connection.doGet(route)
+func (connection *mockConnection) Request(route string) (<-chan []byte, <-chan error) {
+	return connection.request(route)
 }
 
 func Test_NewRestApi(t *testing.T) {

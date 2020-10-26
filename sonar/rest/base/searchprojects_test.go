@@ -3,13 +3,12 @@ package base
 import (
 	"encoding/json"
 	"errors"
-	"sonarci/net"
 	"sonarci/sonar"
 	"testing"
 )
 
 func Test_restApi_SearchProjects(t *testing.T) {
-	mockOk := &mockConnection{doGet: func(route string) (<-chan []byte, <-chan error) {
+	mockOk := &mockConnection{request: func(route string) (<-chan []byte, <-chan error) {
 		wrapper := &searchProjectsWrapper{Components: []searchProject{{"id", "org", "key", "name", "visibility"}}}
 		buff, _ := json.Marshal(wrapper)
 
@@ -20,7 +19,7 @@ func Test_restApi_SearchProjects(t *testing.T) {
 		chEr <- nil
 		return chOk, chEr
 	}}
-	mockComponentsNil := &mockConnection{doGet: func(route string) (<-chan []byte, <-chan error) {
+	mockComponentsNil := &mockConnection{request: func(route string) (<-chan []byte, <-chan error) {
 		wrapper := &searchProjectsWrapper{}
 		buff, _ := json.Marshal(wrapper)
 
@@ -31,7 +30,7 @@ func Test_restApi_SearchProjects(t *testing.T) {
 		chEr <- nil
 		return chOk, chEr
 	}}
-	mockComponentsEmpty := &mockConnection{doGet: func(route string) (<-chan []byte, <-chan error) {
+	mockComponentsEmpty := &mockConnection{request: func(route string) (<-chan []byte, <-chan error) {
 		wrapper := &searchProjectsWrapper{Components: []searchProject{}}
 		buff, _ := json.Marshal(wrapper)
 
@@ -42,7 +41,7 @@ func Test_restApi_SearchProjects(t *testing.T) {
 		chEr <- nil
 		return chOk, chEr
 	}}
-	mockInvalidJson := &mockConnection{doGet: func(route string) (<-chan []byte, <-chan error) {
+	mockInvalidJson := &mockConnection{request: func(route string) (<-chan []byte, <-chan error) {
 		chOk := make(chan []byte, 1)
 		chOk <- []byte{}
 
@@ -50,14 +49,14 @@ func Test_restApi_SearchProjects(t *testing.T) {
 		chEr <- nil
 		return chOk, chEr
 	}}
-	mockError := &mockConnection{doGet: func(route string) (<-chan []byte, <-chan error) {
+	mockError := &mockConnection{request: func(route string) (<-chan []byte, <-chan error) {
 		chError := make(chan error, 1)
 		chError <- errors.New("failure")
 		return nil, chError
 	}}
 
 	type fields struct {
-		Connection net.Connection
+		Connection sonar.Connection
 	}
 	type args struct {
 		projects string

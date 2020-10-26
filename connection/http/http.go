@@ -1,6 +1,7 @@
 package http
 
 import (
+	"bytes"
 	"encoding/base64"
 	"errors"
 	"fmt"
@@ -26,7 +27,7 @@ func (connection *Connection) GetHostServer() string {
 	return connection.HostServer
 }
 
-func (connection *Connection) DoGet(route string) (<-chan []byte, <-chan error) {
+func (connection *Connection) Request(endpoint string) (<-chan []byte, <-chan error) {
 	chOut := make(chan []byte, 1)
 	chErr := make(chan error, 1)
 
@@ -36,7 +37,7 @@ func (connection *Connection) DoGet(route string) (<-chan []byte, <-chan error) 
 
 		client := &http.Client{Timeout: connection.Timeout}
 
-		url := fmt.Sprintf("%s/%s", strings.TrimRight(connection.HostServer, "/"), strings.TrimLeft(route, "/"))
+		url := parseUrl(connection.GetHostServer(), endpoint)
 		req, err := http.NewRequest("GET", url, nil)
 		if err != nil {
 			chErr <- err
@@ -53,7 +54,6 @@ func (connection *Connection) DoGet(route string) (<-chan []byte, <-chan error) 
 		defer closeResource(resp.Body)
 		if !isStatusSuccess(resp.StatusCode) {
 			chErr <- errors.New("Failed request. Status Code: " + resp.Status)
-			return
 		}
 
 		buff, err := ioutil.ReadAll(resp.Body)
@@ -68,10 +68,56 @@ func (connection *Connection) DoGet(route string) (<-chan []byte, <-chan error) 
 	return chOut, chErr
 }
 
+func (connection *Connection) Send(endpoint string, content []byte, contentType string) (<-chan []byte, <-chan error) {
+	chOut := make(chan []byte, 1)
+	chErr := make(chan error, 1)
+
+	go func() {
+		defer close(chOut)
+		defer close(chErr)
+
+		client := &http.Client{Timeout: connection.Timeout}
+
+		url := parseUrl(connection.GetHostServer(), endpoint)
+		req, err := http.NewRequest("POST", url, bytes.NewReader(content))
+		if err != nil {
+			chErr <- err
+			return
+		}
+
+		req.Header.Add("Authorization", "Basic "+encodeToken(connection.Token))
+		req.Header.Add("Content-Type", contentType)
+		resp, err := client.Do(req)
+		if err != nil {
+			chErr <- err
+			return
+		}
+
+		defer closeResource(resp.Body)
+		if !isStatusSuccess(resp.StatusCode) {
+			chErr <- errors.New("Failed request. Status Code: " + resp.Status)
+		}
+
+		buff, err := ioutil.ReadAll(resp.Body)
+		if err != nil {
+			chErr <- err
+			return
+		}
+
+		chOut <- buff
+	}()
+
+	return chOut, chErr
+}
+
+func parseUrl(host string, endpoint string) string {
+	return fmt.Sprintf("%s/%s", strings.TrimRight(host, "/"), strings.TrimLeft(endpoint, "/"))
+}
+
 func closeResource(resource io.Closer) {
 	err := resource.Close()
 	if err != nil {
-		log.Println("Failure to close HTTP resource: ", err.Error())
+		log.Panic("Failure to close HTTP resource: ", err.Error())
 	}
 }
 
