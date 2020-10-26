@@ -63,8 +63,8 @@ func decorate(cmd *cobra.Command, _ []string) {
 		log.Fatal(err)
 	}
 
-	checkQualityGate(qualityGate)
 	decoratePullRequest(qualityGate, pFlags.Timeout)
+	checkQualityGate(qualityGate)
 }
 
 func decoratePullRequest(qualityGate sonar.QualityGate, timeout time.Duration) {
