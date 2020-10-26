@@ -62,9 +62,9 @@ func parseTemplateModel(qualityGate sonar.QualityGate) templateModel {
 	}
 
 	if tplModel.coverageStatus == "" {
-		tplModel.coverage = "-"
+		tplModel.coverage = "N/A"
 		tplModel.coverageStatus = "SUCCESS"
-		tplModel.coverageStatusColor = "green"
+		tplModel.coverageStatusColor = "lightgray"
 	}
 
 	return tplModel
@@ -86,7 +86,7 @@ func convertStatusColor(status string) string {
 	status = strings.ToUpper(status)
 	switch status {
 	case "OK":
-		return "green"
+		return "brightgreen"
 	case "ERROR":
 		return "red"
 	default:
