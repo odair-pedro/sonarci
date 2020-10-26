@@ -36,8 +36,8 @@ func Test_convertStatusColor(t *testing.T) {
 		args args
 		want string
 	}{
-		{name: "test-ok", args: args{status: "ok"}, want: "green"},
-		{name: "test-OK", args: args{status: "OK"}, want: "green"},
+		{name: "test-ok", args: args{status: "ok"}, want: "brightgreen"},
+		{name: "test-OK", args: args{status: "OK"}, want: "brightgreen"},
 		{name: "test-error", args: args{status: "error"}, want: "red"},
 		{name: "test-ERROR", args: args{status: "ERROR"}, want: "red"},
 		{name: "test-other", args: args{status: "other"}, want: "yellow"},
