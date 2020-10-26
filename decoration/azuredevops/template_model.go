@@ -41,7 +41,7 @@ func parseTemplateModel(qualityGate sonar.QualityGate) templateModel {
 	sec := qualityGate.Conditions[keyNewSecurityRating]
 	mtb := qualityGate.Conditions[keyNewMaintainabilityRating]
 
-	return templateModel{
+	tplModel := templateModel{
 		host:                       qualityGate.Host,
 		project:                    qualityGate.Project,
 		pullRequest:                qualityGate.Source,
@@ -60,6 +60,14 @@ func parseTemplateModel(qualityGate sonar.QualityGate) templateModel {
 		maintainabilityStatus:      convertStatus(mtb.Status),
 		maintainabilityStatusColor: convertStatusColor(mtb.Status),
 	}
+
+	if tplModel.coverageStatus == "" {
+		tplModel.coverage = "-"
+		tplModel.coverageStatus = "SUCCESS"
+		tplModel.coverageStatusColor = "green"
+	}
+
+	return tplModel
 }
 
 func convertStatus(status string) string {
