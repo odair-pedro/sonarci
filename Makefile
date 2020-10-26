@@ -1,6 +1,6 @@
-all: deps test build-linux build-windows
+all: deps test install-linux install-windows
 
-install: build-linux build-windows
+install: install-linux install-windows
 
 deps:
 	go get -v -t -d
