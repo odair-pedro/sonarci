@@ -33,6 +33,7 @@ func NewRootCmd() *cobra.Command {
 	rootCmd.AddCommand(NewServerVersionCmd())
 	rootCmd.AddCommand(NewSearchCmd())
 	rootCmd.AddCommand(NewValidateCmd())
+	rootCmd.AddCommand(NewDecorateCmd())
 
 	return rootCmd
 }
