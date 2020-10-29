@@ -220,6 +220,7 @@ SONARCI_DECORATION_REPOSITORY (Repository name)
 SONARCI_DECORATION_TOKEN      (PAT)
 ```
 
+---
 
 ## Looking for examples?
 Soon...
