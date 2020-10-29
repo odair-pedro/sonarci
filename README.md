@@ -42,6 +42,7 @@ Usage:
   sonarci [command]
 
 Available Commands:
+  decorate       Decorate pull request with the quality gate report
   help           Help about any command
   search         Search for SonarQube projects
   server-version Get SonarQube server version
@@ -57,6 +58,33 @@ Flags:
 Use "sonarci [command] --help" for more information about a command.
 
 ```
+
+### Command: Decorate
+
+Decorate pull request with the SonarQube's quality gate report.
+
+```
+./sonarci decorate --help
+```
+
+```
+Decorate pull request with the SonarQube's quality gate report.
+
+Usage:
+  sonarci decorate [flags]
+
+Flags:
+  -h, --help                  help for decorate
+  -p, --project string        SonarQube projects key
+  -r, --pull-request string   Pull request ID
+
+Global Flags:
+  -s, --server string   SonarQube server address
+  -t, --timeout int     Timeout in milliseconds. Default value is 30000 ms
+  -o, --token string    Authentication Token
+```
+
+For mode detail about pull request decoration, read the section [Pull Request Decoration](#pull-request-decoration)
 
 ### Command: Search projects
 
@@ -171,6 +199,7 @@ Usage:
   sonarci validate pr [pull request id] [flags]
 
 Flags:
+  -d, --decorate         Decorate a pull request with quality gate results
   -h, --help             help for pr
   -p, --project string   SonarQube projects key
 
@@ -179,6 +208,18 @@ Global Flags:
   -t, --timeout int     Timeout in milliseconds. Default value is 30000 ms
   -o, --token string    Authentication Token
 ```
+
+## Pull Request Decoration
+
+For pull request decoration you need to set the following environment variables:
+
+```
+SONARCI_DECORATION_TYPE       (azrepos|github)
+SONARCI_DECORATION_PROJECT    (Project URI)
+SONARCI_DECORATION_REPOSITORY (Repository name)
+SONARCI_DECORATION_TOKEN      (PAT)
+```
+
 
 ## Looking for examples?
 Soon...
