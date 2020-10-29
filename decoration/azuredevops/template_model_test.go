@@ -141,3 +141,47 @@ func Test_parseTemplateModel_Error_WithoutCoverage(t *testing.T) {
 		t.Errorf("parseTemplateModel() returned unexpected value")
 	}
 }
+
+func Test_parseTemplateModel_Ok_WithoutDuplication(t *testing.T) {
+	qualityGate := sonar.QualityGate{Host: "http://localhost", Project: "Project", Source: "123",
+		SourceType: "pullrequest", Status: "OK", LinkDetail: "http://localhost/detail", Conditions: map[string]sonar.QualityGateCondition{
+			"new_reliability_rating":       {Status: "OK", Description: "new_reliability_rating", Value: 0, ErrorThreshold: 0, Comparator: "GT"},
+			"new_security_rating":          {Status: "OK", Description: "new_security_rating", Value: 0, ErrorThreshold: 0, Comparator: "GT"},
+			"new_maintainability_rating":   {Status: "OK", Description: "new_maintainability_rating", Value: 0, ErrorThreshold: 0, Comparator: "GT"},
+			"new_coverage":                 {Status: "", Description: "new_coverage", Value: 0, ErrorThreshold: 0, Comparator: ""},
+			"new_duplicated_lines_density": {Status: "", Description: "new_duplicated_lines_density", Value: 0, ErrorThreshold: 0, Comparator: ""},
+		}}
+
+	want := templateModel{host: "http://localhost", project: "Project", pullRequest: "123", status: "SUCCESS",
+		statusColor: "brightgreen", coverage: "N/A", coverageStatus: "SUCCESS", coverageStatusColor: "lightgray",
+		duplication: "N/A", duplicationStatus: "SUCCESS", duplicationStatusColor: "lightgray",
+		reliabilityStatus: "SUCCESS", reliabilityStatusColor: "brightgreen", securityStatus: "SUCCESS",
+		securityStatusColor: "brightgreen", maintainabilityStatus: "SUCCESS", maintainabilityStatusColor: "brightgreen"}
+
+	got := parseTemplateModel(qualityGate)
+	if got != want {
+		t.Errorf("parseTemplateModel() returned unexpected value")
+	}
+}
+
+func Test_parseTemplateModel_Error_WithoutDuplication(t *testing.T) {
+	qualityGate := sonar.QualityGate{Host: "http://localhost", Project: "Project", Source: "123",
+		SourceType: "pullrequest", Status: "ERROR", LinkDetail: "http://localhost/detail", Conditions: map[string]sonar.QualityGateCondition{
+			"new_reliability_rating":       {Status: "OK", Description: "new_reliability_rating", Value: 0, ErrorThreshold: 0, Comparator: "GT"},
+			"new_security_rating":          {Status: "ERROR", Description: "new_security_rating", Value: 0, ErrorThreshold: 0, Comparator: "GT"},
+			"new_maintainability_rating":   {Status: "OK", Description: "new_maintainability_rating", Value: 0, ErrorThreshold: 0, Comparator: "GT"},
+			"new_coverage":                 {Status: "", Description: "new_coverage", Value: 0, ErrorThreshold: 0, Comparator: ""},
+			"new_duplicated_lines_density": {Status: "", Description: "new_duplicated_lines_density", Value: 0, ErrorThreshold: 0, Comparator: ""},
+		}}
+
+	want := templateModel{host: "http://localhost", project: "Project", pullRequest: "123", status: "FAILED",
+		statusColor: "red", coverage: "N/A", coverageStatus: "SUCCESS", coverageStatusColor: "lightgray",
+		duplication: "N/A", duplicationStatus: "SUCCESS", duplicationStatusColor: "lightgray",
+		reliabilityStatus: "SUCCESS", reliabilityStatusColor: "brightgreen", securityStatus: "FAILED",
+		securityStatusColor: "red", maintainabilityStatus: "SUCCESS", maintainabilityStatusColor: "brightgreen"}
+
+	got := parseTemplateModel(qualityGate)
+	if got != want {
+		t.Errorf("parseTemplateModel() returned unexpected value")
+	}
+}

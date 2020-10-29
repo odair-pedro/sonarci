@@ -41,7 +41,7 @@ func parseTemplateModel(qualityGate sonar.QualityGate) templateModel {
 	sec := qualityGate.Conditions[keyNewSecurityRating]
 	mtb := qualityGate.Conditions[keyNewMaintainabilityRating]
 
-	tplModel := templateModel{
+	model := templateModel{
 		host:                       qualityGate.Host,
 		project:                    qualityGate.Project,
 		pullRequest:                qualityGate.Source,
@@ -61,13 +61,10 @@ func parseTemplateModel(qualityGate sonar.QualityGate) templateModel {
 		maintainabilityStatusColor: convertStatusColor(mtb.Status),
 	}
 
-	if tplModel.coverageStatus == "" {
-		tplModel.coverage = "N/A"
-		tplModel.coverageStatus = "SUCCESS"
-		tplModel.coverageStatusColor = "lightgray"
-	}
+	model = checkCoverageData(model)
+	model = checkDuplicationData(model)
 
-	return tplModel
+	return model
 }
 
 func convertStatus(status string) string {
@@ -92,4 +89,22 @@ func convertStatusColor(status string) string {
 	default:
 		return "yellow"
 	}
+}
+
+func checkCoverageData(model templateModel) templateModel {
+	if model.coverageStatus == "" {
+		model.coverage = "N/A"
+		model.coverageStatus = "SUCCESS"
+		model.coverageStatusColor = "lightgray"
+	}
+	return model
+}
+
+func checkDuplicationData(model templateModel) templateModel {
+	if model.duplicationStatus == "" {
+		model.duplication = "N/A"
+		model.duplicationStatus = "SUCCESS"
+		model.duplicationStatusColor = "lightgray"
+	}
+	return model
 }
