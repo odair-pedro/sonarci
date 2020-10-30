@@ -12,14 +12,27 @@ A simple CLI for help you integrate Sonar inspections with CI pipelines.
 
 ## Installation
 
-### Automated
 To get started quickly and easily install use the following commands.
+
+### Global
+
+To install globally, run the following command:
+``` 
+curl -sSL https://raw.githubusercontent.com/odair-pedro/sonarci/master/install.sh | sudo sh
+````
+
+Note: If the command sonarci fails after installation, check your path.
+You can also create a symbolic link to /usr/bin or any other directory in your path.
+
+### Local
+
+To install locally in current directory, run the following command:
 ``` 
 curl -sSL https://raw.githubusercontent.com/odair-pedro/sonarci/master/install-local.sh | sh
 ````
 
 ### From source
-Those who want to install from source code may use the following command (on root directory):
+To build and install locally from source code use the following command (on root directory):
 
 ``` 
 make install
