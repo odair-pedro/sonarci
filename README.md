@@ -263,6 +263,4 @@ steps:
 ```
 
 ### GitHub Action
-Coming soon :smiley:
-
-
+Coming soon ...
