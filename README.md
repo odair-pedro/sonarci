@@ -44,7 +44,7 @@ make install
 ## Usage
 
 ```
-./sonarci --help
+sonarci --help
 ```
 
 ```
@@ -76,7 +76,7 @@ Use "sonarci [command] --help" for more information about a command.
 Decorate pull request with the SonarQube's quality gate report.
 
 ```
-./sonarci decorate --help
+sonarci decorate --help
 ```
 
 ```
@@ -103,7 +103,7 @@ For mode detail about pull request decoration, read the section [Pull Request De
 Search and retrieve information about the specified SonarQube projects.
 
 ```
-./sonarci search --help
+sonarci search --help
 ```
 
 ```
@@ -127,7 +127,7 @@ Global Flags:
 Get SonarQube server version.
 
 ```
-./sonarci server-version --help
+sonarci server-version --help
 ```
 
 ```
@@ -150,7 +150,7 @@ Global Flags:
 Validate a branch or pull request status on SonarQube.
 
 ```
-./sonarci validate --help
+sonarci validate --help
 ```
 
 ```
@@ -177,7 +177,7 @@ Global Flags:
 Validate a branch status on SonarQube.
 
 ```
-./sonarci validate branch --help
+sonarci validate branch --help
 ```
 
 ```
@@ -201,7 +201,7 @@ Global Flags:
 Validate a pull request status on SonarQube.
 
 ```
-./sonarci validate pr --help
+sonarci validate pr --help
 ```
 
 ```
