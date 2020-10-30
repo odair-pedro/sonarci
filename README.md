@@ -21,7 +21,7 @@ To install globally, run the following command:
 curl -sSL https://raw.githubusercontent.com/odair-pedro/sonarci/master/install.sh | sudo sh
 ````
 
-###### Note: If the command sonarci fails after installation, check your path. You can also create a symbolic link to /usr/bin or any other directory in your path.
+Note: If the command sonarci fails after installation, check your path. You can also create a symbolic link to /usr/bin or any other directory in your path.
 
 Example:
 ```
@@ -42,7 +42,7 @@ To build and install locally from source code use the following command (on root
 make install
 ``` 
 
-###### Note: SonarCI will be installed on current directory
+Note: SonarCI will be installed on current directory
 
 
 ---
