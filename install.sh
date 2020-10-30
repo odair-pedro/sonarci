@@ -14,7 +14,7 @@ install() {
     rm sonarci-linux-x64.tar.gz
 
     sudo mv ./sonarci /usr/local/bin/sonarci
-    sudo chmod +x /usr/local/bin/docker-compose
+    sudo chmod +x /usr/local/bin/sonarci
 
     printBanner
 }
