@@ -13,7 +13,7 @@ A simple CLI for help you integrate Sonar inspections with CI pipelines.
 ## Installation
 
 ### Automated
-To get started quickly and easily may install using the following command.
+To get started quickly and easily install use the following commands.
 ``` 
 curl -sSL https://raw.githubusercontent.com/odair-pedro/sonarci/master/install-local.sh | sh
 ````
