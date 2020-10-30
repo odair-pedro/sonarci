@@ -235,6 +235,34 @@ SONARCI_DECORATION_TOKEN      (PAT)
 ---
 
 ## Looking for examples?
-Soon...
+
+### Azure Pipeline
+
+You can use the following example to integrate the pipeline pull request analyzer with SonarCI
+
+```yaml
+trigger:
+- none
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+steps:
+- script: |
+    curl -sSL https://raw.githubusercontent.com/odair-pedro/sonarci/master/install.sh | sudo sh
+
+    export SONARCI_DECORATION_TYPE="azrepos"
+    export SONARCI_DECORATION_PROJECT="$(AZDEVEOPS-COMPANY-NAME)/$(System.TeamProject)"
+    export SONARCI_DECORATION_REPOSITORY="$(Build.Repository.Name)"
+    export SONARCI_DECORATION_TOKEN=$(AZDEVEOPS-PAT)
+
+    sonarci --version
+    sonarci -s "$(SONAR-SERVER)" -o $(SONAR-TOKEN) decorate -r $(System.PullRequest.PullRequestId) -p "$(SONAR-PROJECT-KEY)"
+  displayName: 'SonarCI'
+
+```
+
+### GitHub Action
+Coming soon :smiley:
 
 
