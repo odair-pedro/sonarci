@@ -23,6 +23,11 @@ curl -sSL https://raw.githubusercontent.com/odair-pedro/sonarci/master/install.s
 
 ###### Note: If the command sonarci fails after installation, check your path. You can also create a symbolic link to /usr/bin or any other directory in your path.
 
+Example:
+```
+sudo ln -s /usr/local/bin/sonarci /usr/bin/sonarci
+```
+
 ### Local
 
 To install locally in current directory, run the following command:
