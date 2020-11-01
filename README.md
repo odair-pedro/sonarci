@@ -243,7 +243,7 @@ SONARCI_DECORATION_TOKEN      (PAT)
 
 ### Azure Pipeline
 
-You can use the following example to integrate the pipeline pull request analyzer with SonarCI
+You can use the following example to integrate a pipeline pull request analyzer with SonarCI
 
 ```yaml
 trigger:
