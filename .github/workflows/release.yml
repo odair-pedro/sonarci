@@ -15,8 +15,9 @@ jobs:
 
       - name: Set Package Version
         run: |
-          echo ${{ github.ref }} | sed -r 's/[refs\/tags\/v]+//g'` >> $PKG_VERSION
+          PKG_VERSION=`echo ${{ github.ref }} | sed -r 's/[refs\/tags\/v]+//g'`
           echo Version: $PKG_VERSION
+          echo $PKG_VERSION >> $PKG_VERSION
 
       - name: Make
         run: |
