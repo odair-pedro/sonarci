@@ -70,6 +70,6 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           push: true
-          tags: odair-pedro/sonarci-cli:${{ $PKG_VERSION }},odair-pedro/sonarci-cli:latest
+          tags: odair-pedro/sonarci-cli:${{ jobs.<job_id>.env.$PKG_VERSION }},odair-pedro/sonarci-cli:latest
       - name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
