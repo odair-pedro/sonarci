@@ -14,17 +14,17 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Set Package Version
-        id: package-version
         run: |
           PKG_VERSION=`echo ${{ github.ref }} | sed -r 's/[refs\/tags\/v]+//g'`
           echo Version: $PKG_VERSION
-          echo "::set-output name=version::$(echo $PKG_VERSION)"
-          echo ${{ steps.package_version.outputs.version }}
+          echo "::set-env name=package_version::$PKG_VERSION"
+          echo ${{ env.package_version }}
+          echo ${env.package_version}
 
       - name: Make
         run: |
-          echo Version: ${{ steps.package_version.outputs.version }}
-          make version=${{ steps.package_version.outputs.version }}
+          echo Version: ${env.package_version}
+          make version=${env.package_version}
           zip sonarci-win-x64.zip sonarci.exe README.md
           tar -czvf sonarci-linux-x64.tar.gz sonarci README.md
 
@@ -73,6 +73,6 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           push: true
-          tags: odair-pedro/sonarci-cli:${{ steps.package_version.outputs.version }},odair-pedro/sonarci-cli:latest
+          tags: odair-pedro/sonarci-cli:${{ env.package_version }},odair-pedro/sonarci-cli:latest
       - name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
