@@ -44,6 +44,14 @@ make install
 
 Note: SonarCI will be installed on current directory
 
+## Runing from Docker
+
+If you prefer to use SonarCI CLI from Docker, just run the following command:
+
+```
+docker run odairpedro/sonarci-cli sonarci [command]
+```
+
 
 ---
 ## Usage
