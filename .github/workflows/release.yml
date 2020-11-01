@@ -18,7 +18,7 @@ jobs:
         run: |
           PKG_VERSION=`echo ${{ github.ref }} | sed -r 's/[refs\/tags\/v]+//g'`
           echo Version: $PKG_VERSION
-          echo "::set-output name=version::$(PKG_VERSION)"
+          echo "::set-output name=version::$(echo $PKG_VERSION)"
 
       - name: Make
         run: |
