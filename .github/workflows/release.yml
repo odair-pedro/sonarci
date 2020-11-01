@@ -17,9 +17,7 @@ jobs:
         run: |
           PKG_VERSION=`echo ${{ github.ref }} | sed -r 's/[refs\/tags\/v]+//g'`
           echo Version: $PKG_VERSION
-          echo "::set-env name=package_version::$PKG_VERSION"
-          echo ${{ env.package_version }}
-          echo ${env.package_version}
+          echo "package_version=$PKG_VERSION" >> $GITHUB_ENV
 
       - name: Make
         run: |
