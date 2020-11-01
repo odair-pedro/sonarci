@@ -13,10 +13,13 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
+      - name: Set Package Version
+        run: |
+          echo ${{ github.ref }} | sed -r 's/[refs\/tags\/v]+//g'` >> $PKG_VERSION
+          echo Version: $PKG_VERSION
+
       - name: Make
         run: |
-          PKG_VERSION=`echo ${{ github.ref }} | sed -r 's/[refs\/tags\/v]+//g'`          
-          echo Version: $PKG_VERSION
           make version=$PKG_VERSION
           zip sonarci-win-x64.zip sonarci.exe README.md
           tar -czvf sonarci-linux-x64.tar.gz sonarci README.md
@@ -67,7 +70,7 @@ jobs:
         with:
           push: true
           tags: |
-            odair-pedro/sonarci-cli:$github.ref
+            odair-pedro/sonarci-cli:$PKG_VERSION
             odair-pedro/sonarci-cli:latest
       - name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
