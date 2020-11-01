@@ -54,7 +54,7 @@ If you prefer to use SonarCI CLI with Docker, just run the following command:
 docker run odairpedro/sonarci-cli sonarci [command]
 ```
 
-or the following command to help and usage:
+or the following command for help and usage:
 
 ```
 docker run odairpedro/sonarci-cli sonarci --help
