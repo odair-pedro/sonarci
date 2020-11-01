@@ -67,7 +67,7 @@ jobs:
         with:
           push: true
           tags: |
-            odair-pedro/sonarci-cli:${{ PKG_VERSION }}
-            odair-pedro/sonarci-cli:latest
+            "odair-pedro/sonarci-cli:$PKG_VERSION"
+            "odair-pedro/sonarci-cli:latest"
       - name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
