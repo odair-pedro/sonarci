@@ -248,7 +248,7 @@ For pull request decoration you need to set the following environment variables:
 
 |Name|Type|Description|
 |-|-|-|
-|SONARCI_DECORATION_TYPE|String|To use: azrepos or github|
+|SONARCI_DECORATION_TYPE|String|Allowed values: azrepos or github|
 |SONARCI_DECORATION_PROJECT|String|Project URI|
 |SONARCI_DECORATION_REPOSITORY|String|Repository name|
 |SONARCI_DECORATION_TOKEN|String|PAT|
