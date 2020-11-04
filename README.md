@@ -242,7 +242,7 @@ Global Flags:
   -o, --token string    Authentication Token
 ```
 
-## Environment Variables
+### Environment Variables
 
 For pull request decoration you need to set the following environment variables:
 
