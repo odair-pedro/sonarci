@@ -5,7 +5,8 @@ A simple CLI to help you integrate Sonar inspections with CI pipelines.
 [![Coverage Status](https://coveralls.io/repos/github/odair-pedro/sonarci/badge.svg?branch=master)](https://coveralls.io/github/odair-pedro/sonarci?branch=master)
 [![Go Report Card](https://goreportcard.com/badge/github.com/odair-pedro/sonarci)](https://goreportcard.com/report/github.com/odair-pedro/sonarci)
 
-[![GitHub version](https://badge.fury.io/gh/odair-pedro%2Fsonarci.svg)](https://github.com/odair-pedro/sonarci/releases/latest)
+[![GitHub version](https://img.shields.io/github/v/release/odair-pedro/sonarci?label=version&color=brightgreen)](https://github.com/odair-pedro/sonarci/releases/latest)
+[![Docker Version](https://img.shields.io/docker/v/odairpedro/sonarci-cli?label=docker%20version)](https://hub.docker.com/r/odairpedro/sonarci-cli)
 [![Open Source Helpers](https://www.codetriage.com/odair-pedro/sonarci/badges/users.svg)](https://www.codetriage.com/odair-pedro/sonarci)
 
 ---
