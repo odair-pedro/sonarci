@@ -241,16 +241,16 @@ Global Flags:
   -o, --token string    Authentication Token
 ```
 
-## Pull Request Decoration
+## Environment Variables
 
 For pull request decoration you need to set the following environment variables:
 
-```
-SONARCI_DECORATION_TYPE       (azrepos|github)
-SONARCI_DECORATION_PROJECT    (Project URI)
-SONARCI_DECORATION_REPOSITORY (Repository name)
-SONARCI_DECORATION_TOKEN      (PAT)
-```
+|Name|Type|Description|
+|-|-|-|
+|SONARCI_DECORATION_TYPE|String|To use: azrepos or github|
+|SONARCI_DECORATION_PROJECT|String|Project URI|
+|SONARCI_DECORATION_REPOSITORY|String|Repository name|
+|SONARCI_DECORATION_TOKEN|String|PAT|
 
 ---
 
