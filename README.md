@@ -116,7 +116,7 @@ Global Flags:
   -o, --token string    Authentication Token
 ```
 
-For mode detail about pull request decoration, read the section [Pull Request Decoration](#pull-request-decoration)
+For more detail about how to configure pull request decoration, read the section [Environment Variables](#environment-variables)
 
 ### Command: Search projects
 
