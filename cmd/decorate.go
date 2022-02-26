@@ -4,8 +4,8 @@ import (
 	"github.com/spf13/cobra"
 	"log"
 	"os"
+	"sonarci/connection"
 	"sonarci/connection/http"
-	"sonarci/decoration"
 	decorationFactory "sonarci/decoration/factory"
 	templateFactory "sonarci/decoration/template/factory"
 	"sonarci/sonar"
@@ -101,7 +101,7 @@ func decoratePullRequest(qualityGate sonar.QualityGate, timeout time.Duration) {
 
 	engine := templateFactory.CreateDummyTemplateEngine()
 	decorator, err := decorationFactory.CreatePullRequestDecorator(decoratorType, project, repository, engine,
-		func(server string) decoration.Connection {
+		func(server string) connection.Connection {
 			return http.NewConnection(server, token, timeout)
 		})
 	if err != nil {
