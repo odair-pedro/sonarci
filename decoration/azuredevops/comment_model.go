@@ -10,8 +10,13 @@ const (
 const commentType = "system"
 
 type commentWrapperModel struct {
-	Status   string         `json:"status"`
-	Comments []commentModel `json:"comments"`
+	Status     string         `json:"status"`
+	Properties propertyModel  `json:"properties"`
+	Comments   []commentModel `json:"comments"`
+}
+
+type propertyModel struct {
+	GeneratedBySonarCI bool
 }
 
 type commentModel struct {
@@ -27,7 +32,10 @@ func parseCommentModel(qualityGate sonar.QualityGate, report string) commentWrap
 		status = statusActive
 	}
 
-	return commentWrapperModel{Status: status, Comments: []commentModel{
-		{CommentType: commentType, Content: report},
-	}}
+	return commentWrapperModel{
+		Status:     status,
+		Properties: propertyModel{GeneratedBySonarCI: true},
+		Comments: []commentModel{
+			{CommentType: commentType, Content: report},
+		}}
 }

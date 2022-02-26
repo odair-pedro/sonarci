@@ -26,3 +26,10 @@ func Test_parseCommentModel_CheckStatus(t *testing.T) {
 		})
 	}
 }
+
+func Test_parseCommentModel_CheckPropetiesGeneratedBySonarCI_IsTrue(t *testing.T) {
+	got := parseCommentModel(sonar.QualityGate{Status: "anything"}, "report-test").Properties.GeneratedBySonarCI
+	if got != true {
+		t.Errorf("parseCommentModel() Properties.GeneratedBySonarCI want true")
+	}
+}
