@@ -12,7 +12,9 @@ A simple CLI to help you integrate Sonar inspections with CI pipelines.
 ---
 
 ## What does it do?
-Sor far, basically, SonarCI decorate your pull requests with a report like that:
+Sor far, basically, SonarCI can decorate your pull requests with a quality report (and also other cool things :smiley:)
+
+Like that:
 
 ## Quality Report
 
