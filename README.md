@@ -297,7 +297,7 @@ steps:
     export SONARCI_DECORATION_TOKEN=$(AZDEVEOPS-PAT)
 
     sonarci --version
-    sonarci -s "$(SONAR-SERVER)" -o $(SONAR-TOKEN) validate pr $(System.PullRequest.PullRequestId) -p "$(SONAR-PROJECT-KEY) -d"
+    sonarci -s "$(SONAR-SERVER)" -o $(SONAR-TOKEN) decorate -r $(System.PullRequest.PullRequestId) -p "$(SONAR-PROJECT-KEY)"
   displayName: 'SonarCI'
 
 ```
