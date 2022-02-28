@@ -20,6 +20,6 @@ func (decorator *PullRequestDecorator) CommentQualityGate(qualityGate sonar.Qual
 	body, _ := json.Marshal(commentModel)
 
 	endpoint := fmt.Sprintf(routeCommentPullRequest, formatPath(decorator.Project), formatPath(decorator.Repository), qualityGate.Source)
-	_, chErr := decorator.Connection.Send(endpoint, body, "application/json")
+	_, chErr := decorator.Connection.Post(endpoint, body, "application/json")
 	return <-chErr
 }

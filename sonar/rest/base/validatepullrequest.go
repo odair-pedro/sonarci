@@ -10,7 +10,7 @@ import (
 const routePullRequestDetails = "/dashboard?id=%s&pullRequest=%s"
 
 func (restApi *RestApi) ValidatePullRequestInternal(routeApi string, project string, pullRequest string) error {
-	chBuff, chErr := restApi.Request(fmt.Sprintf(routeApi, escapeValue(project), pullRequest))
+	chBuff, chErr := restApi.Get(fmt.Sprintf(routeApi, escapeValue(project), pullRequest))
 	err := <-chErr
 	if err != nil {
 		return err

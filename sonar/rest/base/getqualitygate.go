@@ -23,7 +23,7 @@ func (restApi *RestApi) GetPullRequestQualityGate(project string, pullRequest st
 }
 
 func (restApi *RestApi) getQualityGate(project string, sourceType string, source string) (sonar.QualityGate, error) {
-	chBuff, chErr := restApi.Request(fmt.Sprintf(routeQualityGate, project, sourceType, source))
+	chBuff, chErr := restApi.Get(fmt.Sprintf(routeQualityGate, project, sourceType, source))
 	err := <-chErr
 	if err != nil {
 		return sonar.QualityGate{}, err

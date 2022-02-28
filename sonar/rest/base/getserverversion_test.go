@@ -8,14 +8,14 @@ import (
 )
 
 func Test_restApi_GetServerVersion(t *testing.T) {
-	mockVersion := &mocks.MockConnection{RequestMock: func(route string) (<-chan []byte, <-chan error) {
+	mockVersion := &mocks.MockConnection{GetMock: func(route string) (<-chan []byte, <-chan error) {
 		chVersion := make(chan []byte, 1)
 		chVersion <- []byte("1.0")
 		chErr := make(chan error, 1)
 		chErr <- nil
 		return chVersion, chErr
 	}}
-	mockError := &mocks.MockConnection{RequestMock: func(route string) (<-chan []byte, <-chan error) {
+	mockError := &mocks.MockConnection{GetMock: func(route string) (<-chan []byte, <-chan error) {
 		chError := make(chan error, 1)
 		chError <- errors.New("failure")
 		return nil, chError

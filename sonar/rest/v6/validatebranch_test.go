@@ -8,7 +8,7 @@ import (
 
 func Test_ValidateBranch_CheckError(t *testing.T) {
 	restApi := NewRestApi(&mocks.MockConnection{
-		RequestMock: func(route string) (<-chan []byte, <-chan error) {
+		GetMock: func(route string) (<-chan []byte, <-chan error) {
 			chErr := make(chan error, 1)
 			chErr <- errors.New("error-test")
 			return nil, chErr

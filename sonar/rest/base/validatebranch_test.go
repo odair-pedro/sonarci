@@ -105,7 +105,7 @@ func Test_restApi_validateBranchStatus_checkErrorMessage(t *testing.T) {
 }
 
 func Test_restApi_ValidateBranchInternal(t *testing.T) {
-	mockOk := &mocks.MockConnection{HostServerMock: "http://server", RequestMock: func(route string) (<-chan []byte, <-chan error) {
+	mockOk := &mocks.MockConnection{HostServerMock: "http://server", GetMock: func(route string) (<-chan []byte, <-chan error) {
 		bStatus := branchStatusWrapper{Component: branchStatus{Measures: []branchStatusMeasure{{Value: "OK"}}, Branch: "branch-name", Project: "project"}}
 		buff, _ := json.Marshal(bStatus)
 
@@ -116,12 +116,12 @@ func Test_restApi_ValidateBranchInternal(t *testing.T) {
 		chErr <- nil
 		return chOk, chErr
 	}}
-	mockError := &mocks.MockConnection{HostServerMock: "http://server", RequestMock: func(route string) (<-chan []byte, <-chan error) {
+	mockError := &mocks.MockConnection{HostServerMock: "http://server", GetMock: func(route string) (<-chan []byte, <-chan error) {
 		chError := make(chan error, 1)
 		chError <- errors.New("failure")
 		return nil, chError
 	}}
-	mockErrorStatus := &mocks.MockConnection{HostServerMock: "http://server", RequestMock: func(route string) (<-chan []byte, <-chan error) {
+	mockErrorStatus := &mocks.MockConnection{HostServerMock: "http://server", GetMock: func(route string) (<-chan []byte, <-chan error) {
 		bStatus := &branchStatus{Measures: []branchStatusMeasure{{Value: "ERROR"}}, Branch: "branch-name", Project: "project"}
 		buff, _ := json.Marshal(bStatus)
 
@@ -132,7 +132,7 @@ func Test_restApi_ValidateBranchInternal(t *testing.T) {
 		chErr <- nil
 		return chOk, chErr
 	}}
-	mockInvalidJson := &mocks.MockConnection{RequestMock: func(route string) (<-chan []byte, <-chan error) {
+	mockInvalidJson := &mocks.MockConnection{GetMock: func(route string) (<-chan []byte, <-chan error) {
 		chOk := make(chan []byte, 1)
 		chOk <- []byte{}
 

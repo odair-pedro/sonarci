@@ -3,19 +3,38 @@ package azuredevops
 import (
 	"encoding/json"
 	"fmt"
+	"log"
 	"sonarci/decoration/azuredevops/models"
 	"strings"
 )
 
-const routeListThreadsPullRequest = "%s/_apis/git/repositories/%s/pullRequests/%s/threads?api-version=6.0"
+const routeListPullRequestThreadsComments = "%s/_apis/git/repositories/%s/pullRequests/%s/threads?api-version=6.0"
+const routeDeletePullRequestThreadComment = "%s/_apis/git/repositories/%s/pullRequests/%s/threads/%s/comments/%s?api-version=6.0"
 
 func (decorator *PullRequestDecorator) ClearPreviousComments(pullRequest string) error {
-	// TODO: to implements
+	comments, err := decorator.loadMyPullRequestThreadsComments(pullRequest)
+	if err != nil {
+		return err
+	}
+
+	chErrDel := make(chan error, len(comments))
+	defer close(chErrDel)
+
+	for _, comment := range comments {
+		go decorator.deletePullRequestThreadComment(comment, chErrDel)
+		errDel := <-chErrDel
+		if errDel != nil {
+			log.Println(fmt.Sprintf("Failue at remove old comments from pull request (%s): %s",
+				pullRequest, err.Error()))
+		}
+	}
+
 	return nil
 }
 
-func (decorator *PullRequestDecorator) loadMyPullRequestThreads(pullRequest string) ([]string, error) {
-	chBuff, chErr := decorator.Request(fmt.Sprintf(routeListThreadsPullRequest, formatPath(decorator.Project), formatPath(decorator.Repository), pullRequest))
+func (decorator *PullRequestDecorator) loadMyPullRequestThreadsComments(pullRequest string) ([]commentToDelete, error) {
+	chBuff, chErr := decorator.Get(fmt.Sprintf(routeListPullRequestThreadsComments, formatPath(decorator.Project),
+		formatPath(decorator.Repository), pullRequest))
 	err := <-chErr
 	if err != nil {
 		return nil, err
@@ -28,12 +47,31 @@ func (decorator *PullRequestDecorator) loadMyPullRequestThreads(pullRequest stri
 		return nil, err
 	}
 
-	var threadsRet []string
-	for _, t := range threadsWrapper.Value {
-		if !t.IsDeleted && strings.ToLower(t.Properties.GeneratedBySonarCI.Value) == "true" {
-			threadsRet = append(threadsRet, t.Id)
+	var commentsToDelete []commentToDelete
+	for _, thread := range threadsWrapper.Value {
+		if !thread.IsDeleted && strings.ToLower(thread.Properties.GeneratedBySonarCI.Value) == "true" {
+			for _, comment := range thread.Comments {
+				if !comment.IsDeleted {
+					commentsToDelete = append(commentsToDelete,
+						commentToDelete{PullRequest: pullRequest, CommentId: comment.Id, ThreadId: thread.Id})
+				}
+			}
 		}
 	}
 
-	return threadsRet, nil
+	return commentsToDelete, nil
+}
+
+func (decorator *PullRequestDecorator) deletePullRequestThreadComment(comment commentToDelete, chErr chan<- error) {
+	chErrDel := decorator.Connection.Delete(fmt.Sprintf(routeDeletePullRequestThreadComment, formatPath(decorator.Project),
+		formatPath(decorator.Repository), comment.PullRequest, comment.ThreadId, comment.CommentId))
+
+	errDel := <-chErrDel
+	chErr <- errDel
+}
+
+type commentToDelete struct {
+	PullRequest string
+	CommentId   string
+	ThreadId    string
 }
