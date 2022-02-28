@@ -11,6 +11,23 @@ A simple CLI to help you integrate Sonar inspections with CI pipelines.
 
 ---
 
+## What does it do?
+Sor far, basically, SonarCI decorate your the pull request with a report like that:
+
+## Quality Report
+
+![Status](https://img.shields.io/badge/status-FAILED-red?style=for-the-badge)
+
+| Metric | Rating |
+|-|-|
+| New Coverage |![Status](https://img.shields.io/badge/49.56-FAILED-red?style=for-the-badge)|
+| New Duplicated Lines Density |![Status](https://img.shields.io/badge/0.00-SUCCESS-brightgreen?style=for-the-badge)|
+| Reliability |![Status](https://img.shields.io/badge/SUCCESS-brightgreen?style=for-the-badge)|
+| Security |![Status](https://img.shields.io/badge/SUCCESS-brightgreen?style=for-the-badge)|
+| Maintainability |![Status](https://img.shields.io/badge/SUCCESS-brightgreen?style=for-the-badge)|
+
+---
+
 ## Installation
 
 To get started quickly and easily install use the following commands.
@@ -287,20 +304,3 @@ steps:
 
 ### GitHub Action
 Coming soon ...
-
----
-
-SonarCI will decorate the pull request with a report like that:
-
-## Quality Report
-
-![Status](https://img.shields.io/badge/status-FAILED-red?style=for-the-badge)
-
-| Metric | Rating |
-|-|-|
-| New Coverage |![Status](https://img.shields.io/badge/49.56-FAILED-red?style=for-the-badge)|
-| New Duplicated Lines Density |![Status](https://img.shields.io/badge/0.00-SUCCESS-brightgreen?style=for-the-badge)|
-| Reliability |![Status](https://img.shields.io/badge/SUCCESS-brightgreen?style=for-the-badge)|
-| Security |![Status](https://img.shields.io/badge/SUCCESS-brightgreen?style=for-the-badge)|
-| Maintainability |![Status](https://img.shields.io/badge/SUCCESS-brightgreen?style=for-the-badge)|
-
