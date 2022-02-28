@@ -1,11 +1,11 @@
 package models
 
 type ThreadModelWrapper struct {
-	Value []ThreadModel `json:"values"`
+	Value []ThreadModel `json:"value"`
 }
 
 type ThreadModel struct {
-	Id         string               `json:"id"`
+	Id         int                  `json:"id"`
 	Status     string               `json:"status"`
 	IsDeleted  bool                 `json:"isDeleted"`
 	Comments   []ThreadCommentModel `json:"comments"`
@@ -13,8 +13,8 @@ type ThreadModel struct {
 }
 
 type ThreadCommentModel struct {
-	Id        string `json:"id"`
-	IsDeleted bool   `json:"isDeleted"`
+	Id        int  `json:"id"`
+	IsDeleted bool `json:"isDeleted"`
 }
 
 type ThreadPropertyModel struct {

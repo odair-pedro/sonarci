@@ -54,40 +54,40 @@ func TestPullRequestDecorator_loadMyPullRequestThreadsComments_CheckErrorOnReadR
 func TestPullRequestDecorator_loadMyPullRequestThreadsComments_CheckResult(t *testing.T) {
 	threads := models.ThreadModelWrapper{
 		Value: []models.ThreadModel{
-			{Id: "1", IsDeleted: false,
+			{Id: 1, IsDeleted: false,
 				Comments: []models.ThreadCommentModel{
-					{Id: "10", IsDeleted: false},
-					{Id: "11", IsDeleted: true},
-					{Id: "12", IsDeleted: false},
+					{Id: 10, IsDeleted: false},
+					{Id: 11, IsDeleted: true},
+					{Id: 12, IsDeleted: false},
 				},
 				Properties: models.ThreadPropertyModel{GeneratedBySonarCI: models.ThreadPropertySonarCIModel{Value: "True"}},
 			},
-			{Id: "2", IsDeleted: true,
+			{Id: 2, IsDeleted: true,
 				Comments: []models.ThreadCommentModel{
-					{Id: "20", IsDeleted: false},
-					{Id: "21", IsDeleted: false},
-					{Id: "22", IsDeleted: false},
+					{Id: 20, IsDeleted: false},
+					{Id: 21, IsDeleted: false},
+					{Id: 22, IsDeleted: false},
 				},
 				Properties: models.ThreadPropertyModel{GeneratedBySonarCI: models.ThreadPropertySonarCIModel{Value: "True"}},
 			},
-			{Id: "3", IsDeleted: false,
+			{Id: 3, IsDeleted: false,
 				Comments: []models.ThreadCommentModel{
-					{Id: "31", IsDeleted: false},
-					{Id: "32", IsDeleted: false},
+					{Id: 31, IsDeleted: false},
+					{Id: 32, IsDeleted: false},
 				},
 				Properties: models.ThreadPropertyModel{GeneratedBySonarCI: models.ThreadPropertySonarCIModel{Value: "true"}},
 			},
-			{Id: "4", IsDeleted: false,
+			{Id: 4, IsDeleted: false,
 				Comments: []models.ThreadCommentModel{
-					{Id: "41", IsDeleted: false},
-					{Id: "42", IsDeleted: false},
+					{Id: 41, IsDeleted: false},
+					{Id: 42, IsDeleted: false},
 				},
 				Properties: models.ThreadPropertyModel{GeneratedBySonarCI: models.ThreadPropertySonarCIModel{Value: "false"}},
 			},
-			{Id: "5", IsDeleted: false,
+			{Id: 5, IsDeleted: false,
 				Comments: []models.ThreadCommentModel{
-					{Id: "51", IsDeleted: false},
-					{Id: "52", IsDeleted: false},
+					{Id: 51, IsDeleted: false},
+					{Id: 52, IsDeleted: false},
 				},
 				Properties: models.ThreadPropertyModel{GeneratedBySonarCI: models.ThreadPropertySonarCIModel{Value: "anything"}},
 			},
@@ -96,10 +96,10 @@ func TestPullRequestDecorator_loadMyPullRequestThreadsComments_CheckResult(t *te
 
 	pullRequest := "pull-request-test"
 	wantThreads := []commentToDelete{
-		{PullRequest: pullRequest, ThreadId: "1", CommentId: "10"},
-		{PullRequest: pullRequest, ThreadId: "1", CommentId: "12"},
-		{PullRequest: pullRequest, ThreadId: "3", CommentId: "31"},
-		{PullRequest: pullRequest, ThreadId: "3", CommentId: "32"},
+		{PullRequest: pullRequest, ThreadId: 1, CommentId: 10},
+		{PullRequest: pullRequest, ThreadId: 1, CommentId: 12},
+		{PullRequest: pullRequest, ThreadId: 3, CommentId: 31},
+		{PullRequest: pullRequest, ThreadId: 3, CommentId: 32},
 	}
 
 	mockConn := &mocks.MockConnection{

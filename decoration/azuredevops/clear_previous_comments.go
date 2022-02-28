@@ -3,13 +3,12 @@ package azuredevops
 import (
 	"encoding/json"
 	"fmt"
-	"log"
 	"sonarci/decoration/azuredevops/models"
 	"strings"
 )
 
 const routeListPullRequestThreadsComments = "%s/_apis/git/repositories/%s/pullRequests/%s/threads?api-version=6.0"
-const routeDeletePullRequestThreadComment = "%s/_apis/git/repositories/%s/pullRequests/%s/threads/%s/comments/%s?api-version=6.0"
+const routeDeletePullRequestThreadComment = "%s/_apis/git/repositories/%s/pullRequests/%s/threads/%d/comments/%d?api-version=6.0"
 
 func (decorator *PullRequestDecorator) ClearPreviousComments(pullRequest string) error {
 	comments, err := decorator.loadMyPullRequestThreadsComments(pullRequest)
@@ -17,15 +16,16 @@ func (decorator *PullRequestDecorator) ClearPreviousComments(pullRequest string)
 		return err
 	}
 
-	chErrDel := make(chan error, len(comments))
-	defer close(chErrDel)
+	if len(comments) > 0 {
+		chErrDel := make(chan error, len(comments))
+		defer close(chErrDel)
 
-	for _, comment := range comments {
-		go decorator.deletePullRequestThreadComment(comment, chErrDel)
-		errDel := <-chErrDel
-		if errDel != nil {
-			log.Println(fmt.Sprintf("Failue at remove old comments from pull request (%s): %s",
-				pullRequest, err.Error()))
+		for _, comment := range comments {
+			go decorator.deletePullRequestThreadComment(comment, chErrDel)
+			errDel := <-chErrDel
+			if errDel != nil {
+				return errDel
+			}
 		}
 	}
 
@@ -72,6 +72,6 @@ func (decorator *PullRequestDecorator) deletePullRequestThreadComment(comment co
 
 type commentToDelete struct {
 	PullRequest string
-	CommentId   string
-	ThreadId    string
+	CommentId   int
+	ThreadId    int
 }
