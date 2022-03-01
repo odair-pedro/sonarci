@@ -9,6 +9,102 @@ import (
 	"testing"
 )
 
+func TestPullRequestDecorator_ClearPreviousComments_CheckErrorOnLoadComments(t *testing.T) {
+	wantError := errors.New("failure")
+
+	mockConn := &mocks.MockConnection{
+		GetMock: func(route string) (<-chan []byte, <-chan error) {
+			chError := make(chan error, 1)
+			defer close(chError)
+
+			chError <- wantError
+			return nil, chError
+		},
+	}
+
+	decorator := NewPullRequestDecorator(mockConn, &mocks.MockEngine{}, "project-test", "repo-test")
+	gotError := decorator.ClearPreviousComments("pullrequest-test")
+
+	if gotError != wantError {
+		t.Fail()
+	}
+}
+
+func TestPullRequestDecorator_ClearPreviousComments_CheckErrorOnDeleteComments(t *testing.T) {
+	wantError := errors.New("failure")
+
+	mockConn := &mocks.MockConnection{
+		GetMock: func(route string) (<-chan []byte, <-chan error) {
+			chOut := make(chan []byte, 1)
+			chError := make(chan error, 1)
+			defer close(chOut)
+			defer close(chError)
+
+			out, _ := json.Marshal(models.ThreadModelWrapper{
+				Value: []models.ThreadModel{
+					{
+						Id:         1,
+						Comments:   []models.ThreadCommentModel{{Id: 1}},
+						Properties: models.ThreadPropertyModel{GeneratedBySonarCI: models.ThreadPropertySonarCIModel{Value: "true"}},
+					},
+				},
+			})
+			chOut <- out
+			return chOut, chError
+		},
+		DeleteMock: func(route string) <-chan error {
+			chError := make(chan error, 1)
+			defer close(chError)
+
+			chError <- wantError
+			return chError
+		},
+	}
+
+	decorator := NewPullRequestDecorator(mockConn, &mocks.MockEngine{}, "project-test", "repo-test")
+	gotError := decorator.ClearPreviousComments("pullrequest-test")
+
+	if gotError != wantError {
+		t.Fail()
+	}
+}
+
+func TestPullRequestDecorator_ClearPreviousComments_CheckNoError(t *testing.T) {
+	mockConn := &mocks.MockConnection{
+		GetMock: func(route string) (<-chan []byte, <-chan error) {
+			chOut := make(chan []byte, 1)
+			chError := make(chan error, 1)
+			defer close(chOut)
+			defer close(chError)
+
+			out, _ := json.Marshal(models.ThreadModelWrapper{
+				Value: []models.ThreadModel{
+					{
+						Id:         1,
+						Comments:   []models.ThreadCommentModel{{Id: 1}},
+						Properties: models.ThreadPropertyModel{GeneratedBySonarCI: models.ThreadPropertySonarCIModel{Value: "true"}},
+					},
+				},
+			})
+			chOut <- out
+			return chOut, chError
+		},
+		DeleteMock: func(route string) <-chan error {
+			chError := make(chan error, 1)
+			defer close(chError)
+
+			return chError
+		},
+	}
+
+	decorator := NewPullRequestDecorator(mockConn, &mocks.MockEngine{}, "project-test", "repo-test")
+	gotError := decorator.ClearPreviousComments("pullrequest-test")
+
+	if gotError != nil {
+		t.Fail()
+	}
+}
+
 func TestPullRequestDecorator_loadMyPullRequestThreadsComments_CheckErrorOnRequest(t *testing.T) {
 	wantError := errors.New("failure")
 
@@ -23,7 +119,7 @@ func TestPullRequestDecorator_loadMyPullRequestThreadsComments_CheckErrorOnReque
 	}
 
 	decorator := NewPullRequestDecorator(mockConn, &mocks.MockEngine{}, "project-test", "repo-test")
-	_, gotErr := decorator.loadMyPullRequestThreadsComments("anything")
+	_, gotErr := decorator._loadMyPullRequestThreadsComments("anything")
 
 	if gotErr != wantError {
 		t.FailNow()
@@ -44,7 +140,7 @@ func TestPullRequestDecorator_loadMyPullRequestThreadsComments_CheckErrorOnReadR
 	}
 
 	decorator := NewPullRequestDecorator(mockConn, &mocks.MockEngine{}, "project-test", "repo-test")
-	_, gotErr := decorator.loadMyPullRequestThreadsComments("anything")
+	_, gotErr := decorator._loadMyPullRequestThreadsComments("anything")
 
 	if gotErr == nil {
 		t.FailNow()
@@ -95,7 +191,7 @@ func TestPullRequestDecorator_loadMyPullRequestThreadsComments_CheckResult(t *te
 	}
 
 	pullRequest := "pull-request-test"
-	wantThreads := []commentToDelete{
+	wantThreads := []_commentToDelete{
 		{PullRequest: pullRequest, ThreadId: 1, CommentId: 10},
 		{PullRequest: pullRequest, ThreadId: 1, CommentId: 12},
 		{PullRequest: pullRequest, ThreadId: 3, CommentId: 31},
@@ -116,7 +212,7 @@ func TestPullRequestDecorator_loadMyPullRequestThreadsComments_CheckResult(t *te
 	}
 
 	decorator := NewPullRequestDecorator(mockConn, &mocks.MockEngine{}, "project-test", "repo-test")
-	gotThreads, err := decorator.loadMyPullRequestThreadsComments(pullRequest)
+	gotThreads, err := decorator._loadMyPullRequestThreadsComments(pullRequest)
 
 	if err != nil {
 		t.Fail()
@@ -126,4 +222,94 @@ func TestPullRequestDecorator_loadMyPullRequestThreadsComments_CheckResult(t *te
 		t.Fail()
 	}
 
+}
+
+func TestPullRequestDecorator_deletePullRequestThreadComment_CheckErrorOnChannelErrorAsynchronously(t *testing.T) {
+	wantError := errors.New("failure")
+
+	mockConn := &mocks.MockConnection{
+		DeleteMock: func(route string) <-chan error {
+			chError := make(chan error, 1)
+			defer close(chError)
+
+			chError <- wantError
+			return chError
+		},
+	}
+
+	decorator := NewPullRequestDecorator(mockConn, &mocks.MockEngine{}, "project-test", "repo-test")
+
+	chErr := make(chan error)
+	go decorator._deletePullRequestThreadComment(_commentToDelete{}, chErr)
+
+	gotError := <-chErr
+	if gotError != wantError {
+		t.Fail()
+	}
+}
+
+func TestPullRequestDecorator_deletePullRequestThreadComment_CheckErrorOnChannelErrorSynchronously(t *testing.T) {
+	wantError := errors.New("failure")
+
+	mockConn := &mocks.MockConnection{
+		DeleteMock: func(route string) <-chan error {
+			chError := make(chan error, 1)
+			defer close(chError)
+
+			chError <- wantError
+			return chError
+		},
+	}
+
+	decorator := NewPullRequestDecorator(mockConn, &mocks.MockEngine{}, "project-test", "repo-test")
+
+	chErr := make(chan error, 1)
+	decorator._deletePullRequestThreadComment(_commentToDelete{}, chErr)
+
+	gotError := <-chErr
+	if gotError != wantError {
+		t.Fail()
+	}
+}
+
+func TestPullRequestDecorator_deletePullRequestThreadComment_CheckNoErrorOnChannelErrorAsynchronously(t *testing.T) {
+	mockConn := &mocks.MockConnection{
+		DeleteMock: func(route string) <-chan error {
+			chError := make(chan error, 1)
+			defer close(chError)
+
+			return chError
+		},
+	}
+
+	decorator := NewPullRequestDecorator(mockConn, &mocks.MockEngine{}, "project-test", "repo-test")
+
+	chErr := make(chan error)
+	go decorator._deletePullRequestThreadComment(_commentToDelete{}, chErr)
+
+	gotError := <-chErr
+	if gotError != nil {
+		t.Fail()
+	}
+}
+
+func TestPullRequestDecorator_deletePullRequestThreadComment_CheckNoErrorOnChannelErrorSynchronously(t *testing.T) {
+	mockConn := &mocks.MockConnection{
+		DeleteMock: func(route string) <-chan error {
+			chError := make(chan error, 1)
+			defer close(chError)
+
+			return chError
+		},
+	}
+
+	decorator := NewPullRequestDecorator(mockConn, &mocks.MockEngine{}, "project-test", "repo-test")
+
+	chErr := make(chan error, 1)
+	decorator._deletePullRequestThreadComment(_commentToDelete{}, chErr)
+
+	gotError := <-chErr
+	if gotError != nil {
+		t.Fail()
+	}
 }
