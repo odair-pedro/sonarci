@@ -1,13 +1,13 @@
 package factory
 
 import (
-	"sonarci/decoration"
+	"sonarci/connection"
 	"sonarci/decoration/azuredevops"
 	"testing"
 )
 
 func Test_CreatePullRequestDecorator_AzRepos_CheckResult(t *testing.T) {
-	decorator, _ := CreatePullRequestDecorator("azrepos", "project", "repository", nil, func(server string) decoration.Connection {
+	decorator, _ := CreatePullRequestDecorator("azrepos", "project", "repository", nil, func(server string) connection.Connection {
 		return nil
 	})
 	if decorator == nil {
@@ -16,7 +16,7 @@ func Test_CreatePullRequestDecorator_AzRepos_CheckResult(t *testing.T) {
 }
 
 func Test_CreatePullRequestDecorator_AzRepos_CheckResultType(t *testing.T) {
-	decorator, _ := CreatePullRequestDecorator("azrepos", "project", "repository", nil, func(server string) decoration.Connection {
+	decorator, _ := CreatePullRequestDecorator("azrepos", "project", "repository", nil, func(server string) connection.Connection {
 		return nil
 	})
 
@@ -29,7 +29,7 @@ func Test_CreatePullRequestDecorator_AzRepos_CheckResultType(t *testing.T) {
 }
 
 func Test_CreatePullRequestDecorator_AzRepos_CheckError(t *testing.T) {
-	_, err := CreatePullRequestDecorator("azrepos", "project", "repository", nil, func(server string) decoration.Connection {
+	_, err := CreatePullRequestDecorator("azrepos", "project", "repository", nil, func(server string) connection.Connection {
 		return nil
 	})
 	if err != nil {

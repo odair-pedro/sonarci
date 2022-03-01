@@ -4,8 +4,8 @@ import (
 	"github.com/spf13/cobra"
 	"log"
 	"os"
+	"sonarci/connection"
 	"sonarci/connection/http"
-	"sonarci/decoration"
 	decorationFactory "sonarci/decoration/factory"
 	templateFactory "sonarci/decoration/template/factory"
 	"sonarci/sonar"
@@ -77,40 +77,45 @@ func decoratePullRequest(qualityGate sonar.QualityGate, timeout time.Duration) {
 
 	decoratorType := os.Getenv(decoratorTypeEnv)
 	if decoratorType == "" {
-		log.Printf("Failed decoration, decorator type has not been found")
+		log.Print("Failed decoration, decorator type has not been found")
 		return
 	}
 
 	project := os.Getenv(projectEnv)
 	if project == "" {
-		log.Printf("Failed decoration, project information has not been found")
+		log.Print("Failed decoration, project information has not been found")
 		return
 	}
 
 	repository := os.Getenv(repositoryEnv)
 	if repository == "" {
-		log.Printf("Failed decoration, repository information has not been found")
+		log.Print("Failed decoration, repository information has not been found")
 		return
 	}
 
 	token := os.Getenv(tokenEnv)
 	if token == "" {
-		log.Printf("Failed decoration, token information has not been found")
+		log.Print("Failed decoration, token information has not been found")
 		return
 	}
 
 	engine := templateFactory.CreateDummyTemplateEngine()
 	decorator, err := decorationFactory.CreatePullRequestDecorator(decoratorType, project, repository, engine,
-		func(server string) decoration.Connection {
+		func(server string) connection.Connection {
 			return http.NewConnection(server, token, timeout)
 		})
 	if err != nil {
-		log.Printf(err.Error())
+		log.Print(err.Error())
 		return
+	}
+
+	err = decorator.ClearPreviousComments(qualityGate.Source)
+	if err != nil {
+		log.Printf("Failue at remove old comments from pull request (%s): %s", qualityGate.Source, err.Error())
 	}
 
 	err = decorator.CommentQualityGate(qualityGate)
 	if err != nil {
-		log.Print("Failure on pull request decoration: ", err.Error())
+		log.Printf("Failure on pull request decoration: %s", err.Error())
 	}
 }

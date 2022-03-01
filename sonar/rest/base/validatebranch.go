@@ -10,7 +10,7 @@ import (
 const routeBranchDetails = "/dashboard?id=%s&branch=%s"
 
 func (restApi *RestApi) ValidateBranchInternal(routeApi string, project string, branch string) error {
-	chBuff, chErr := restApi.Request(fmt.Sprintf(routeApi, escapeValue(project), escapeValue(branch)))
+	chBuff, chErr := restApi.Get(fmt.Sprintf(routeApi, escapeValue(project), escapeValue(branch)))
 	err := <-chErr
 	if err != nil {
 		return err

@@ -2,13 +2,14 @@ package factory
 
 import (
 	"errors"
+	"sonarci/connection"
 	"sonarci/decoration"
 	"sonarci/decoration/azuredevops"
 	"sonarci/decoration/template"
 )
 
 func CreatePullRequestDecorator(decoratorType string, project string, repository string,
-	engine template.Engine, connectionFactory func(server string) decoration.Connection) (decoration.PullRequestDecorator, error) {
+	engine template.Engine, connectionFactory func(server string) connection.Connection) (decoration.PullRequestDecorator, error) {
 
 	switch decoratorType {
 	case typeAzRepos:
@@ -26,6 +27,6 @@ const (
 )
 
 func createPullRequestAzureDecorator(project string, repository string, engine template.Engine,
-	connectionFactory func(server string) decoration.Connection) *azuredevops.PullRequestDecorator {
+	connectionFactory func(server string) connection.Connection) *azuredevops.PullRequestDecorator {
 	return azuredevops.NewPullRequestDecorator(connectionFactory(azuredevops.Server), engine, project, repository)
 }

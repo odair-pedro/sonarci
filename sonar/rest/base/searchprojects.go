@@ -8,7 +8,7 @@ import (
 const routeSearchProjects = "/api/projects/search?projects="
 
 func (restApi *RestApi) SearchProjects(projects string) (<-chan sonar.Project, error) {
-	chBuff, chErr := restApi.Request(routeSearchProjects + projects)
+	chBuff, chErr := restApi.Get(routeSearchProjects + projects)
 	err := <-chErr
 	if err != nil {
 		return nil, err

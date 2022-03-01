@@ -3,12 +3,14 @@ package base
 import (
 	"encoding/json"
 	"errors"
+	"sonarci/connection"
 	"sonarci/sonar"
+	"sonarci/testing/mocks"
 	"testing"
 )
 
 func Test_restApi_SearchProjects(t *testing.T) {
-	mockOk := &mockConnection{request: func(route string) (<-chan []byte, <-chan error) {
+	mockOk := &mocks.MockConnection{GetMock: func(route string) (<-chan []byte, <-chan error) {
 		wrapper := &searchProjectsWrapper{Components: []searchProject{{"id", "org", "key", "name", "visibility"}}}
 		buff, _ := json.Marshal(wrapper)
 
@@ -19,7 +21,7 @@ func Test_restApi_SearchProjects(t *testing.T) {
 		chEr <- nil
 		return chOk, chEr
 	}}
-	mockComponentsNil := &mockConnection{request: func(route string) (<-chan []byte, <-chan error) {
+	mockComponentsNil := &mocks.MockConnection{GetMock: func(route string) (<-chan []byte, <-chan error) {
 		wrapper := &searchProjectsWrapper{}
 		buff, _ := json.Marshal(wrapper)
 
@@ -30,7 +32,7 @@ func Test_restApi_SearchProjects(t *testing.T) {
 		chEr <- nil
 		return chOk, chEr
 	}}
-	mockComponentsEmpty := &mockConnection{request: func(route string) (<-chan []byte, <-chan error) {
+	mockComponentsEmpty := &mocks.MockConnection{GetMock: func(route string) (<-chan []byte, <-chan error) {
 		wrapper := &searchProjectsWrapper{Components: []searchProject{}}
 		buff, _ := json.Marshal(wrapper)
 
@@ -41,7 +43,7 @@ func Test_restApi_SearchProjects(t *testing.T) {
 		chEr <- nil
 		return chOk, chEr
 	}}
-	mockInvalidJson := &mockConnection{request: func(route string) (<-chan []byte, <-chan error) {
+	mockInvalidJson := &mocks.MockConnection{GetMock: func(route string) (<-chan []byte, <-chan error) {
 		chOk := make(chan []byte, 1)
 		chOk <- []byte{}
 
@@ -49,14 +51,14 @@ func Test_restApi_SearchProjects(t *testing.T) {
 		chEr <- nil
 		return chOk, chEr
 	}}
-	mockError := &mockConnection{request: func(route string) (<-chan []byte, <-chan error) {
+	mockError := &mocks.MockConnection{GetMock: func(route string) (<-chan []byte, <-chan error) {
 		chError := make(chan error, 1)
 		chError <- errors.New("failure")
 		return nil, chError
 	}}
 
 	type fields struct {
-		Connection sonar.Connection
+		Connection connection.Connection
 	}
 	type args struct {
 		projects string

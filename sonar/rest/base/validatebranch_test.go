@@ -3,13 +3,14 @@ package base
 import (
 	"encoding/json"
 	"errors"
-	"sonarci/sonar"
+	"sonarci/connection"
+	"sonarci/testing/mocks"
 	"testing"
 )
 
 func Test_restApi_validateBranchStatus_checkError(t *testing.T) {
 	type fields struct {
-		Connection sonar.Connection
+		Connection connection.Connection
 	}
 	type args struct {
 		status branchStatus
@@ -22,25 +23,25 @@ func Test_restApi_validateBranchStatus_checkError(t *testing.T) {
 	}{
 		{
 			name:    "measures-nil",
-			fields:  fields{&mockConnection{hostServer: "http://server"}},
+			fields:  fields{&mocks.MockConnection{HostServerMock: "http://server"}},
 			args:    args{status: branchStatus{Measures: nil, Branch: "branch", Project: "project"}},
 			wantErr: true,
 		},
 		{
 			name:    "measures-empty",
-			fields:  fields{&mockConnection{hostServer: "http://server"}},
+			fields:  fields{&mocks.MockConnection{HostServerMock: "http://server"}},
 			args:    args{status: branchStatus{Measures: nil, Branch: "branch", Project: "project"}},
 			wantErr: true,
 		},
 		{
 			name:    "measures-error",
-			fields:  fields{&mockConnection{hostServer: "http://server"}},
+			fields:  fields{&mocks.MockConnection{HostServerMock: "http://server"}},
 			args:    args{status: branchStatus{Measures: []branchStatusMeasure{{Value: "ERROR"}, {Value: "OK"}}, Branch: "branch", Project: "project"}},
 			wantErr: true,
 		},
 		{
 			name:    "measures-ok",
-			fields:  fields{&mockConnection{hostServer: "http://server"}},
+			fields:  fields{&mocks.MockConnection{HostServerMock: "http://server"}},
 			args:    args{status: branchStatus{Measures: []branchStatusMeasure{{Value: "OK"}, {Value: "ERROR"}}, Branch: "branch", Project: "project"}},
 			wantErr: false,
 		},
@@ -57,7 +58,7 @@ func Test_restApi_validateBranchStatus_checkError(t *testing.T) {
 
 func Test_restApi_validateBranchStatus_checkErrorMessage(t *testing.T) {
 	type fields struct {
-		Connection sonar.Connection
+		Connection connection.Connection
 	}
 	type args struct {
 		status branchStatus
@@ -70,25 +71,25 @@ func Test_restApi_validateBranchStatus_checkErrorMessage(t *testing.T) {
 	}{
 		{
 			name:       "measures-nil",
-			fields:     fields{&mockConnection{hostServer: "http://server"}},
+			fields:     fields{&mocks.MockConnection{HostServerMock: "http://server"}},
 			args:       args{status: branchStatus{Measures: nil, Branch: "branch", Project: "project"}},
 			wantErrMsg: "Failure on validate quality gate results\nFor more detail, visit: http://server/dashboard?id=project&branch=branch",
 		},
 		{
 			name:       "measures-empty",
-			fields:     fields{&mockConnection{hostServer: "http://server"}},
+			fields:     fields{&mocks.MockConnection{HostServerMock: "http://server"}},
 			args:       args{status: branchStatus{Measures: nil, Branch: "branch", Project: "project"}},
 			wantErrMsg: "Failure on validate quality gate results\nFor more detail, visit: http://server/dashboard?id=project&branch=branch",
 		},
 		{
 			name:       "measures-error",
-			fields:     fields{&mockConnection{hostServer: "http://server"}},
+			fields:     fields{&mocks.MockConnection{HostServerMock: "http://server"}},
 			args:       args{status: branchStatus{Measures: []branchStatusMeasure{{Value: "ERROR"}, {Value: "OK"}}, Branch: "branch-name", Project: "project"}},
 			wantErrMsg: "Branch branch-name has not been passed on quality gate\nFor more detail, visit: http://server/dashboard?id=project&branch=branch-name",
 		},
 		{
 			name:       "measures-ok",
-			fields:     fields{&mockConnection{hostServer: "http://server"}},
+			fields:     fields{&mocks.MockConnection{HostServerMock: "http://server"}},
 			args:       args{status: branchStatus{Measures: []branchStatusMeasure{{Value: "OK"}, {Value: "ERROR"}}, Branch: "branch", Project: "project"}},
 			wantErrMsg: "anything",
 		},
@@ -104,7 +105,7 @@ func Test_restApi_validateBranchStatus_checkErrorMessage(t *testing.T) {
 }
 
 func Test_restApi_ValidateBranchInternal(t *testing.T) {
-	mockOk := &mockConnection{hostServer: "http://server", request: func(route string) (<-chan []byte, <-chan error) {
+	mockOk := &mocks.MockConnection{HostServerMock: "http://server", GetMock: func(route string) (<-chan []byte, <-chan error) {
 		bStatus := branchStatusWrapper{Component: branchStatus{Measures: []branchStatusMeasure{{Value: "OK"}}, Branch: "branch-name", Project: "project"}}
 		buff, _ := json.Marshal(bStatus)
 
@@ -115,12 +116,12 @@ func Test_restApi_ValidateBranchInternal(t *testing.T) {
 		chErr <- nil
 		return chOk, chErr
 	}}
-	mockError := &mockConnection{hostServer: "http://server", request: func(route string) (<-chan []byte, <-chan error) {
+	mockError := &mocks.MockConnection{HostServerMock: "http://server", GetMock: func(route string) (<-chan []byte, <-chan error) {
 		chError := make(chan error, 1)
 		chError <- errors.New("failure")
 		return nil, chError
 	}}
-	mockErrorStatus := &mockConnection{hostServer: "http://server", request: func(route string) (<-chan []byte, <-chan error) {
+	mockErrorStatus := &mocks.MockConnection{HostServerMock: "http://server", GetMock: func(route string) (<-chan []byte, <-chan error) {
 		bStatus := &branchStatus{Measures: []branchStatusMeasure{{Value: "ERROR"}}, Branch: "branch-name", Project: "project"}
 		buff, _ := json.Marshal(bStatus)
 
@@ -131,7 +132,7 @@ func Test_restApi_ValidateBranchInternal(t *testing.T) {
 		chErr <- nil
 		return chOk, chErr
 	}}
-	mockInvalidJson := &mockConnection{request: func(route string) (<-chan []byte, <-chan error) {
+	mockInvalidJson := &mocks.MockConnection{GetMock: func(route string) (<-chan []byte, <-chan error) {
 		chOk := make(chan []byte, 1)
 		chOk <- []byte{}
 
@@ -141,7 +142,7 @@ func Test_restApi_ValidateBranchInternal(t *testing.T) {
 	}}
 
 	type fields struct {
-		Connection sonar.Connection
+		Connection connection.Connection
 	}
 	type args struct {
 		routeApi string

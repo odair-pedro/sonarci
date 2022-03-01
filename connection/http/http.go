@@ -27,7 +27,39 @@ func (connection *Connection) GetHostServer() string {
 	return connection.HostServer
 }
 
-func (connection *Connection) Request(endpoint string) (<-chan []byte, <-chan error) {
+func (connection *Connection) Delete(endpoint string) <-chan error {
+	chErr := make(chan error)
+
+	go func() {
+		defer close(chErr)
+
+		client := &http.Client{Timeout: connection.Timeout}
+
+		url := parseUrl(connection.GetHostServer(), endpoint)
+		req, err := http.NewRequest("DELETE", url, nil)
+		if err != nil {
+			chErr <- err
+			return
+		}
+
+		req.Header.Add("Authorization", "Basic "+encodeToken(connection.Token))
+		resp, err := client.Do(req)
+		if err != nil {
+			chErr <- err
+			return
+		}
+
+		defer closeResource(resp.Body)
+		if !isStatusSuccess(resp.StatusCode) {
+			chErr <- errors.New("Failed request. Status Code: " + resp.Status)
+			return
+		}
+	}()
+
+	return chErr
+}
+
+func (connection *Connection) Get(endpoint string) (<-chan []byte, <-chan error) {
 	chOut := make(chan []byte, 1)
 	chErr := make(chan error, 1)
 
@@ -68,7 +100,7 @@ func (connection *Connection) Request(endpoint string) (<-chan []byte, <-chan er
 	return chOut, chErr
 }
 
-func (connection *Connection) Send(endpoint string, content []byte, contentType string) (<-chan []byte, <-chan error) {
+func (connection *Connection) Post(endpoint string, content []byte, contentType string) (<-chan []byte, <-chan error) {
 	chOut := make(chan []byte, 1)
 	chErr := make(chan error, 1)
 

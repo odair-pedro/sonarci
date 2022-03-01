@@ -1,4 +1,4 @@
-package azuredevops
+package models
 
 import (
 	"sonarci/sonar"
@@ -14,7 +14,7 @@ const (
 	keyNewDuplicatedLinesDensity = "new_duplicated_lines_density"
 )
 
-type templateModel struct {
+type TemplateModel struct {
 	host                       string `dummy:"host"`
 	project                    string `dummy:"project"`
 	pullRequest                string `dummy:"pullrequest"`
@@ -34,14 +34,14 @@ type templateModel struct {
 	maintainabilityStatusColor string `dummy:"mtb-status-color"`
 }
 
-func parseTemplateModel(qualityGate sonar.QualityGate) templateModel {
+func ParseTemplateModel(qualityGate sonar.QualityGate) TemplateModel {
 	cov := qualityGate.Conditions[keyNewCoverage]
 	dup := qualityGate.Conditions[keyNewDuplicatedLinesDensity]
 	rel := qualityGate.Conditions[keyNewReliabilityRating]
 	sec := qualityGate.Conditions[keyNewSecurityRating]
 	mtb := qualityGate.Conditions[keyNewMaintainabilityRating]
 
-	model := templateModel{
+	model := TemplateModel{
 		host:                       qualityGate.Host,
 		project:                    qualityGate.Project,
 		pullRequest:                qualityGate.Source,
@@ -91,7 +91,7 @@ func convertStatusColor(status string) string {
 	}
 }
 
-func checkCoverageData(model templateModel) templateModel {
+func checkCoverageData(model TemplateModel) TemplateModel {
 	if model.coverageStatus == "" {
 		model.coverage = "N/A"
 		model.coverageStatus = "SUCCESS"
@@ -100,7 +100,7 @@ func checkCoverageData(model templateModel) templateModel {
 	return model
 }
 
-func checkDuplicationData(model templateModel) templateModel {
+func checkDuplicationData(model TemplateModel) TemplateModel {
 	if model.duplicationStatus == "" {
 		model.duplication = "N/A"
 		model.duplicationStatus = "SUCCESS"

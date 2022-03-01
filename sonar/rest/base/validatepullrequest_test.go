@@ -3,13 +3,14 @@ package base
 import (
 	"encoding/json"
 	"errors"
-	"sonarci/sonar"
+	"sonarci/connection"
+	"sonarci/testing/mocks"
 	"testing"
 )
 
 func Test_restApi_validatePullRequestStatus_checkError(t *testing.T) {
 	type fields struct {
-		Connection sonar.Connection
+		Connection connection.Connection
 	}
 	type args struct {
 		status pullRequestStatus
@@ -22,25 +23,25 @@ func Test_restApi_validatePullRequestStatus_checkError(t *testing.T) {
 	}{
 		{
 			name:    "measures-nil",
-			fields:  fields{&mockConnection{hostServer: "http://server"}},
+			fields:  fields{&mocks.MockConnection{HostServerMock: "http://server"}},
 			args:    args{status: pullRequestStatus{Measures: nil, PullRequest: "pullRequest", Project: "project"}},
 			wantErr: true,
 		},
 		{
 			name:    "measures-empty",
-			fields:  fields{&mockConnection{hostServer: "http://server"}},
+			fields:  fields{&mocks.MockConnection{HostServerMock: "http://server"}},
 			args:    args{status: pullRequestStatus{Measures: nil, PullRequest: "pullRequest", Project: "project"}},
 			wantErr: true,
 		},
 		{
 			name:    "measures-error",
-			fields:  fields{&mockConnection{hostServer: "http://server"}},
+			fields:  fields{&mocks.MockConnection{HostServerMock: "http://server"}},
 			args:    args{status: pullRequestStatus{Measures: []pullRequestStatusMeasure{{Value: "ERROR"}, {Value: "OK"}}, PullRequest: "pullRequest", Project: "project"}},
 			wantErr: true,
 		},
 		{
 			name:    "measures-ok",
-			fields:  fields{&mockConnection{hostServer: "http://server"}},
+			fields:  fields{&mocks.MockConnection{HostServerMock: "http://server"}},
 			args:    args{status: pullRequestStatus{Measures: []pullRequestStatusMeasure{{Value: "OK"}, {Value: "ERROR"}}, PullRequest: "pullRequest", Project: "project"}},
 			wantErr: false,
 		},
@@ -57,7 +58,7 @@ func Test_restApi_validatePullRequestStatus_checkError(t *testing.T) {
 
 func Test_restApi_validatePullRequestStatus_checkErrorMessage(t *testing.T) {
 	type fields struct {
-		Connection sonar.Connection
+		Connection connection.Connection
 	}
 	type args struct {
 		status pullRequestStatus
@@ -70,25 +71,25 @@ func Test_restApi_validatePullRequestStatus_checkErrorMessage(t *testing.T) {
 	}{
 		{
 			name:       "measures-nil",
-			fields:     fields{&mockConnection{hostServer: "http://server"}},
+			fields:     fields{&mocks.MockConnection{HostServerMock: "http://server"}},
 			args:       args{status: pullRequestStatus{Measures: nil, PullRequest: "pullRequest", Project: "project"}},
 			wantErrMsg: "Failure on validate quality gate results\nFor more detail, visit: http://server/dashboard?id=project&pullRequest=pullRequest",
 		},
 		{
 			name:       "measures-empty",
-			fields:     fields{&mockConnection{hostServer: "http://server"}},
+			fields:     fields{&mocks.MockConnection{HostServerMock: "http://server"}},
 			args:       args{status: pullRequestStatus{Measures: nil, PullRequest: "pullRequest", Project: "project"}},
 			wantErrMsg: "Failure on validate quality gate results\nFor more detail, visit: http://server/dashboard?id=project&pullRequest=pullRequest",
 		},
 		{
 			name:       "measures-error",
-			fields:     fields{&mockConnection{hostServer: "http://server"}},
+			fields:     fields{&mocks.MockConnection{HostServerMock: "http://server"}},
 			args:       args{status: pullRequestStatus{Measures: []pullRequestStatusMeasure{{Value: "ERROR"}, {Value: "OK"}}, PullRequest: "pullRequest", Project: "project"}},
 			wantErrMsg: "PullRequest pullRequest has not been passed on quality gate\nFor more detail, visit: http://server/dashboard?id=project&pullRequest=pullRequest",
 		},
 		{
 			name:       "measures-ok",
-			fields:     fields{&mockConnection{hostServer: "http://server"}},
+			fields:     fields{&mocks.MockConnection{HostServerMock: "http://server"}},
 			args:       args{status: pullRequestStatus{Measures: []pullRequestStatusMeasure{{Value: "OK"}, {Value: "ERROR"}}, PullRequest: "pullRequest", Project: "project"}},
 			wantErrMsg: "anything",
 		},
@@ -104,7 +105,7 @@ func Test_restApi_validatePullRequestStatus_checkErrorMessage(t *testing.T) {
 }
 
 func Test_restApi_ValidatePullRequestInternal(t *testing.T) {
-	mockOk := &mockConnection{hostServer: "http://server", request: func(route string) (<-chan []byte, <-chan error) {
+	mockOk := &mocks.MockConnection{HostServerMock: "http://server", GetMock: func(route string) (<-chan []byte, <-chan error) {
 		bStatus := pullRequestStatusWrapper{Component: pullRequestStatus{Measures: []pullRequestStatusMeasure{{Value: "OK"}}, PullRequest: "pullRequest", Project: "project"}}
 		buff, _ := json.Marshal(bStatus)
 
@@ -115,12 +116,12 @@ func Test_restApi_ValidatePullRequestInternal(t *testing.T) {
 		chErr <- nil
 		return chOk, chErr
 	}}
-	mockError := &mockConnection{hostServer: "http://server", request: func(route string) (<-chan []byte, <-chan error) {
+	mockError := &mocks.MockConnection{HostServerMock: "http://server", GetMock: func(route string) (<-chan []byte, <-chan error) {
 		chError := make(chan error, 1)
 		chError <- errors.New("failure")
 		return nil, chError
 	}}
-	mockErrorStatus := &mockConnection{hostServer: "http://server", request: func(route string) (<-chan []byte, <-chan error) {
+	mockErrorStatus := &mocks.MockConnection{HostServerMock: "http://server", GetMock: func(route string) (<-chan []byte, <-chan error) {
 		bStatus := &pullRequestStatus{Measures: []pullRequestStatusMeasure{{Value: "ERROR"}}, PullRequest: "pullRequest", Project: "project"}
 		buff, _ := json.Marshal(bStatus)
 
@@ -131,7 +132,7 @@ func Test_restApi_ValidatePullRequestInternal(t *testing.T) {
 		chErr <- nil
 		return chOk, chErr
 	}}
-	mockInvalidJson := &mockConnection{hostServer: "http://server", request: func(route string) (<-chan []byte, <-chan error) {
+	mockInvalidJson := &mocks.MockConnection{HostServerMock: "http://server", GetMock: func(route string) (<-chan []byte, <-chan error) {
 		chOk := make(chan []byte, 1)
 		chOk <- []byte{}
 
@@ -141,7 +142,7 @@ func Test_restApi_ValidatePullRequestInternal(t *testing.T) {
 	}}
 
 	type fields struct {
-		Connection sonar.Connection
+		Connection connection.Connection
 	}
 	type args struct {
 		routeApi    string
