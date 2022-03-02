@@ -22,8 +22,8 @@ Like that:
 
 | Metric | Rating |
 |-|-|
-| New Coverage |![Status](https://img.shields.io/badge/49.56-FAILED-red?style=for-the-badge)|
-| New Duplicated Lines Density |![Status](https://img.shields.io/badge/0.00-SUCCESS-brightgreen?style=for-the-badge)|
+| New Coverage |![Status](https://img.shields.io/badge/49.56%25-FAILED-red?style=for-the-badge)|
+| New Duplicated Lines Density |![Status](https://img.shields.io/badge/0.00%25-SUCCESS-brightgreen?style=for-the-badge)|
 | New Code Smells |[![Status](https://img.shields.io/badge/0-SUCCESS-brightgreen?style=for-the-badge)]()|
 | Reliability |![Status](https://img.shields.io/badge/SUCCESS-brightgreen?style=for-the-badge)|
 | Security |![Status](https://img.shields.io/badge/SUCCESS-brightgreen?style=for-the-badge)|
