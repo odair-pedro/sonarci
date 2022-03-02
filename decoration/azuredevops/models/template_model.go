@@ -7,11 +7,12 @@ import (
 )
 
 const (
-	keyNewReliabilityRating      = "new_reliability_rating"
-	keyNewSecurityRating         = "new_security_rating"
-	keyNewMaintainabilityRating  = "new_maintainability_rating"
-	keyNewCoverage               = "new_coverage"
-	keyNewDuplicatedLinesDensity = "new_duplicated_lines_density"
+	_keyNewReliabilityRating      = "new_reliability_rating"
+	_keyNewSecurityRating         = "new_security_rating"
+	_keyNewMaintainabilityRating  = "new_maintainability_rating"
+	_keyNewCoverage               = "new_coverage"
+	_keyNewDuplicatedLinesDensity = "new_duplicated_lines_density"
+	_keyNewCodeSmells             = "new_code_smells"
 )
 
 type TemplateModel struct {
@@ -32,42 +33,49 @@ type TemplateModel struct {
 	securityStatusColor        string `dummy:"sec-status-color"`
 	maintainabilityStatus      string `dummy:"mtb-status"`
 	maintainabilityStatusColor string `dummy:"mtb-status-color"`
+	codeSmells                 string `dummy:"smells"`
+	codeSmellsStatus           string `dummy:"smells-status"`
+	codeSmellsStatusColor      string `dummy:"smells-status-color"`
 }
 
 func ParseTemplateModel(qualityGate sonar.QualityGate) TemplateModel {
-	cov := qualityGate.Conditions[keyNewCoverage]
-	dup := qualityGate.Conditions[keyNewDuplicatedLinesDensity]
-	rel := qualityGate.Conditions[keyNewReliabilityRating]
-	sec := qualityGate.Conditions[keyNewSecurityRating]
-	mtb := qualityGate.Conditions[keyNewMaintainabilityRating]
+	cov := qualityGate.Conditions[_keyNewCoverage]
+	dup := qualityGate.Conditions[_keyNewDuplicatedLinesDensity]
+	rel := qualityGate.Conditions[_keyNewReliabilityRating]
+	sec := qualityGate.Conditions[_keyNewSecurityRating]
+	mtb := qualityGate.Conditions[_keyNewMaintainabilityRating]
+	smells := qualityGate.Conditions[_keyNewCodeSmells]
 
 	model := TemplateModel{
 		host:                       qualityGate.Host,
 		project:                    qualityGate.Project,
 		pullRequest:                qualityGate.Source,
-		status:                     convertStatus(qualityGate.Status),
-		statusColor:                convertStatusColor(qualityGate.Status),
+		status:                     _convertStatus(qualityGate.Status),
+		statusColor:                _convertStatusColor(qualityGate.Status),
 		coverage:                   strconv.FormatFloat(float64(cov.Value), 'f', 2, 32) + "%",
-		coverageStatus:             convertStatus(cov.Status),
-		coverageStatusColor:        convertStatusColor(cov.Status),
+		coverageStatus:             _convertStatus(cov.Status),
+		coverageStatusColor:        _convertStatusColor(cov.Status),
 		duplication:                strconv.FormatFloat(float64(dup.Value), 'f', 2, 32) + "%",
-		duplicationStatus:          convertStatus(dup.Status),
-		duplicationStatusColor:     convertStatusColor(dup.Status),
-		reliabilityStatus:          convertStatus(rel.Status),
-		reliabilityStatusColor:     convertStatusColor(rel.Status),
-		securityStatus:             convertStatus(sec.Status),
-		securityStatusColor:        convertStatusColor(sec.Status),
-		maintainabilityStatus:      convertStatus(mtb.Status),
-		maintainabilityStatusColor: convertStatusColor(mtb.Status),
+		duplicationStatus:          _convertStatus(dup.Status),
+		duplicationStatusColor:     _convertStatusColor(dup.Status),
+		reliabilityStatus:          _convertStatus(rel.Status),
+		reliabilityStatusColor:     _convertStatusColor(rel.Status),
+		securityStatus:             _convertStatus(sec.Status),
+		securityStatusColor:        _convertStatusColor(sec.Status),
+		maintainabilityStatus:      _convertStatus(mtb.Status),
+		maintainabilityStatusColor: _convertStatusColor(mtb.Status),
+		codeSmells:                 strconv.FormatFloat(float64(smells.Value), 'f', 0, 32),
+		codeSmellsStatus:           _convertStatus(smells.Status),
+		codeSmellsStatusColor:      _convertStatusColor(smells.Status),
 	}
 
-	model = checkCoverageData(model)
-	model = checkDuplicationData(model)
+	model = _checkCoverageData(model)
+	model = _checkDuplicationData(model)
 
 	return model
 }
 
-func convertStatus(status string) string {
+func _convertStatus(status string) string {
 	status = strings.ToUpper(status)
 	switch status {
 	case "OK":
@@ -79,7 +87,7 @@ func convertStatus(status string) string {
 	}
 }
 
-func convertStatusColor(status string) string {
+func _convertStatusColor(status string) string {
 	status = strings.ToUpper(status)
 	switch status {
 	case "OK":
@@ -91,7 +99,7 @@ func convertStatusColor(status string) string {
 	}
 }
 
-func checkCoverageData(model TemplateModel) TemplateModel {
+func _checkCoverageData(model TemplateModel) TemplateModel {
 	if model.coverageStatus == "" {
 		model.coverage = "N/A"
 		model.coverageStatus = "SUCCESS"
@@ -100,7 +108,7 @@ func checkCoverageData(model TemplateModel) TemplateModel {
 	return model
 }
 
-func checkDuplicationData(model TemplateModel) TemplateModel {
+func _checkDuplicationData(model TemplateModel) TemplateModel {
 	if model.duplicationStatus == "" {
 		model.duplication = "N/A"
 		model.duplicationStatus = "SUCCESS"

@@ -23,7 +23,7 @@ func Test_convertStatus(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := convertStatus(tt.args.status); got != tt.want {
+			if got := _convertStatus(tt.args.status); got != tt.want {
 				t.Errorf("convertStatus() = %v, want %v", got, tt.want)
 			}
 		})
@@ -47,7 +47,7 @@ func Test_convertStatusColor(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := convertStatusColor(tt.args.status); got != tt.want {
+			if got := _convertStatusColor(tt.args.status); got != tt.want {
 				t.Errorf("convertStatusColor() = %v, want %v", got, tt.want)
 			}
 		})
@@ -62,13 +62,31 @@ func Test_ParseTemplateModel_Ok_WithCoverage(t *testing.T) {
 			"new_maintainability_rating":   {Status: "OK", Description: "new_maintainability_rating", Value: 0, ErrorThreshold: 0, Comparator: "GT"},
 			"new_coverage":                 {Status: "OK", Description: "new_coverage", Value: 10.86789, ErrorThreshold: 0, Comparator: "GT"},
 			"new_duplicated_lines_density": {Status: "OK", Description: "new_duplicated_lines_density", Value: 10.86789, ErrorThreshold: 0, Comparator: "GT"},
+			"new_code_smells":              {Status: "OK", Description: "new_code_smells", Value: 0, ErrorThreshold: 0, Comparator: "GT"},
 		}}
 
-	want := TemplateModel{host: "http://localhost", project: "Project", pullRequest: "123", status: "SUCCESS",
-		statusColor: "brightgreen", coverage: "10.87%", coverageStatus: "SUCCESS", coverageStatusColor: "brightgreen",
-		duplication: "10.87%", duplicationStatus: "SUCCESS", duplicationStatusColor: "brightgreen",
-		reliabilityStatus: "SUCCESS", reliabilityStatusColor: "brightgreen", securityStatus: "SUCCESS",
-		securityStatusColor: "brightgreen", maintainabilityStatus: "SUCCESS", maintainabilityStatusColor: "brightgreen"}
+	want := TemplateModel{
+		host:                       "http://localhost",
+		project:                    "Project",
+		pullRequest:                "123",
+		status:                     "SUCCESS",
+		statusColor:                "brightgreen",
+		coverage:                   "10.87%",
+		coverageStatus:             "SUCCESS",
+		coverageStatusColor:        "brightgreen",
+		duplication:                "10.87%",
+		duplicationStatus:          "SUCCESS",
+		duplicationStatusColor:     "brightgreen",
+		reliabilityStatus:          "SUCCESS",
+		reliabilityStatusColor:     "brightgreen",
+		securityStatus:             "SUCCESS",
+		securityStatusColor:        "brightgreen",
+		maintainabilityStatus:      "SUCCESS",
+		maintainabilityStatusColor: "brightgreen",
+		codeSmells:                 "0",
+		codeSmellsStatus:           "SUCCESS",
+		codeSmellsStatusColor:      "brightgreen",
+	}
 
 	got := ParseTemplateModel(qualityGate)
 	if got != want {
@@ -84,13 +102,31 @@ func Test_ParseTemplateModel_Error_WithCoverage(t *testing.T) {
 			"new_maintainability_rating":   {Status: "OK", Description: "new_maintainability_rating", Value: 0, ErrorThreshold: 0, Comparator: "GT"},
 			"new_coverage":                 {Status: "OK", Description: "new_coverage", Value: 10.86789, ErrorThreshold: 0, Comparator: "GT"},
 			"new_duplicated_lines_density": {Status: "OK", Description: "new_duplicated_lines_density", Value: 10.86789, ErrorThreshold: 0, Comparator: "GT"},
+			"new_code_smells":              {Status: "OK", Description: "new_code_smells", Value: 0, ErrorThreshold: 0, Comparator: "GT"},
 		}}
 
-	want := TemplateModel{host: "http://localhost", project: "Project", pullRequest: "123", status: "FAILED",
-		statusColor: "red", coverage: "10.87%", coverageStatus: "SUCCESS", coverageStatusColor: "brightgreen",
-		duplication: "10.87%", duplicationStatus: "SUCCESS", duplicationStatusColor: "brightgreen",
-		reliabilityStatus: "SUCCESS", reliabilityStatusColor: "brightgreen", securityStatus: "FAILED",
-		securityStatusColor: "red", maintainabilityStatus: "SUCCESS", maintainabilityStatusColor: "brightgreen"}
+	want := TemplateModel{
+		host:                       "http://localhost",
+		project:                    "Project",
+		pullRequest:                "123",
+		status:                     "FAILED",
+		statusColor:                "red",
+		coverage:                   "10.87%",
+		coverageStatus:             "SUCCESS",
+		coverageStatusColor:        "brightgreen",
+		duplication:                "10.87%",
+		duplicationStatus:          "SUCCESS",
+		duplicationStatusColor:     "brightgreen",
+		reliabilityStatus:          "SUCCESS",
+		reliabilityStatusColor:     "brightgreen",
+		securityStatus:             "FAILED",
+		securityStatusColor:        "red",
+		maintainabilityStatus:      "SUCCESS",
+		maintainabilityStatusColor: "brightgreen",
+		codeSmells:                 "0",
+		codeSmellsStatus:           "SUCCESS",
+		codeSmellsStatusColor:      "brightgreen",
+	}
 
 	got := ParseTemplateModel(qualityGate)
 	if got != want {
@@ -106,13 +142,30 @@ func Test_ParseTemplateModel_Ok_WithoutCoverage(t *testing.T) {
 			"new_maintainability_rating":   {Status: "OK", Description: "new_maintainability_rating", Value: 0, ErrorThreshold: 0, Comparator: "GT"},
 			"new_coverage":                 {Status: "", Description: "new_coverage", Value: 0, ErrorThreshold: 0, Comparator: ""},
 			"new_duplicated_lines_density": {Status: "OK", Description: "new_duplicated_lines_density", Value: 10.86789, ErrorThreshold: 0, Comparator: "GT"},
+			"new_code_smells":              {Status: "OK", Description: "new_code_smells", Value: 0, ErrorThreshold: 0, Comparator: "GT"},
 		}}
 
-	want := TemplateModel{host: "http://localhost", project: "Project", pullRequest: "123", status: "SUCCESS",
-		statusColor: "brightgreen", coverage: "N/A", coverageStatus: "SUCCESS", coverageStatusColor: "lightgray",
-		duplication: "10.87%", duplicationStatus: "SUCCESS", duplicationStatusColor: "brightgreen",
-		reliabilityStatus: "SUCCESS", reliabilityStatusColor: "brightgreen", securityStatus: "SUCCESS",
-		securityStatusColor: "brightgreen", maintainabilityStatus: "SUCCESS", maintainabilityStatusColor: "brightgreen"}
+	want := TemplateModel{host: "http://localhost",
+		project:                    "Project",
+		pullRequest:                "123",
+		status:                     "SUCCESS",
+		statusColor:                "brightgreen",
+		coverage:                   "N/A",
+		coverageStatus:             "SUCCESS",
+		coverageStatusColor:        "lightgray",
+		duplication:                "10.87%",
+		duplicationStatus:          "SUCCESS",
+		duplicationStatusColor:     "brightgreen",
+		reliabilityStatus:          "SUCCESS",
+		reliabilityStatusColor:     "brightgreen",
+		securityStatus:             "SUCCESS",
+		securityStatusColor:        "brightgreen",
+		maintainabilityStatus:      "SUCCESS",
+		maintainabilityStatusColor: "brightgreen",
+		codeSmells:                 "0",
+		codeSmellsStatus:           "SUCCESS",
+		codeSmellsStatusColor:      "brightgreen",
+	}
 
 	got := ParseTemplateModel(qualityGate)
 	if got != want {
@@ -128,13 +181,30 @@ func Test_ParseTemplateModel_Error_WithoutCoverage(t *testing.T) {
 			"new_maintainability_rating":   {Status: "OK", Description: "new_maintainability_rating", Value: 0, ErrorThreshold: 0, Comparator: "GT"},
 			"new_coverage":                 {Status: "", Description: "new_coverage", Value: 0, ErrorThreshold: 0, Comparator: ""},
 			"new_duplicated_lines_density": {Status: "OK", Description: "new_duplicated_lines_density", Value: 10.86789, ErrorThreshold: 0, Comparator: "GT"},
+			"new_code_smells":              {Status: "OK", Description: "new_code_smells", Value: 0, ErrorThreshold: 0, Comparator: "GT"},
 		}}
 
-	want := TemplateModel{host: "http://localhost", project: "Project", pullRequest: "123", status: "FAILED",
-		statusColor: "red", coverage: "N/A", coverageStatus: "SUCCESS", coverageStatusColor: "lightgray",
-		duplication: "10.87%", duplicationStatus: "SUCCESS", duplicationStatusColor: "brightgreen",
-		reliabilityStatus: "SUCCESS", reliabilityStatusColor: "brightgreen", securityStatus: "FAILED",
-		securityStatusColor: "red", maintainabilityStatus: "SUCCESS", maintainabilityStatusColor: "brightgreen"}
+	want := TemplateModel{host: "http://localhost",
+		project:                    "Project",
+		pullRequest:                "123",
+		status:                     "FAILED",
+		statusColor:                "red",
+		coverage:                   "N/A",
+		coverageStatus:             "SUCCESS",
+		coverageStatusColor:        "lightgray",
+		duplication:                "10.87%",
+		duplicationStatus:          "SUCCESS",
+		duplicationStatusColor:     "brightgreen",
+		reliabilityStatus:          "SUCCESS",
+		reliabilityStatusColor:     "brightgreen",
+		securityStatus:             "FAILED",
+		securityStatusColor:        "red",
+		maintainabilityStatus:      "SUCCESS",
+		maintainabilityStatusColor: "brightgreen",
+		codeSmells:                 "0",
+		codeSmellsStatus:           "SUCCESS",
+		codeSmellsStatusColor:      "brightgreen",
+	}
 
 	got := ParseTemplateModel(qualityGate)
 	if got != want {
@@ -150,13 +220,30 @@ func Test_ParseTemplateModel_Ok_WithoutDuplication(t *testing.T) {
 			"new_maintainability_rating":   {Status: "OK", Description: "new_maintainability_rating", Value: 0, ErrorThreshold: 0, Comparator: "GT"},
 			"new_coverage":                 {Status: "", Description: "new_coverage", Value: 0, ErrorThreshold: 0, Comparator: ""},
 			"new_duplicated_lines_density": {Status: "", Description: "new_duplicated_lines_density", Value: 0, ErrorThreshold: 0, Comparator: ""},
+			"new_code_smells":              {Status: "OK", Description: "new_code_smells", Value: 0, ErrorThreshold: 0, Comparator: "GT"},
 		}}
 
-	want := TemplateModel{host: "http://localhost", project: "Project", pullRequest: "123", status: "SUCCESS",
-		statusColor: "brightgreen", coverage: "N/A", coverageStatus: "SUCCESS", coverageStatusColor: "lightgray",
-		duplication: "N/A", duplicationStatus: "SUCCESS", duplicationStatusColor: "lightgray",
-		reliabilityStatus: "SUCCESS", reliabilityStatusColor: "brightgreen", securityStatus: "SUCCESS",
-		securityStatusColor: "brightgreen", maintainabilityStatus: "SUCCESS", maintainabilityStatusColor: "brightgreen"}
+	want := TemplateModel{host: "http://localhost",
+		project:                    "Project",
+		pullRequest:                "123",
+		status:                     "SUCCESS",
+		statusColor:                "brightgreen",
+		coverage:                   "N/A",
+		coverageStatus:             "SUCCESS",
+		coverageStatusColor:        "lightgray",
+		duplication:                "N/A",
+		duplicationStatus:          "SUCCESS",
+		duplicationStatusColor:     "lightgray",
+		reliabilityStatus:          "SUCCESS",
+		reliabilityStatusColor:     "brightgreen",
+		securityStatus:             "SUCCESS",
+		securityStatusColor:        "brightgreen",
+		maintainabilityStatus:      "SUCCESS",
+		maintainabilityStatusColor: "brightgreen",
+		codeSmells:                 "0",
+		codeSmellsStatus:           "SUCCESS",
+		codeSmellsStatusColor:      "brightgreen",
+	}
 
 	got := ParseTemplateModel(qualityGate)
 	if got != want {
@@ -172,13 +259,31 @@ func Test_ParseTemplateModel_Error_WithoutDuplication(t *testing.T) {
 			"new_maintainability_rating":   {Status: "OK", Description: "new_maintainability_rating", Value: 0, ErrorThreshold: 0, Comparator: "GT"},
 			"new_coverage":                 {Status: "", Description: "new_coverage", Value: 0, ErrorThreshold: 0, Comparator: ""},
 			"new_duplicated_lines_density": {Status: "", Description: "new_duplicated_lines_density", Value: 0, ErrorThreshold: 0, Comparator: ""},
+			"new_code_smells":              {Status: "OK", Description: "new_code_smells", Value: 0, ErrorThreshold: 0, Comparator: "GT"},
 		}}
 
-	want := TemplateModel{host: "http://localhost", project: "Project", pullRequest: "123", status: "FAILED",
-		statusColor: "red", coverage: "N/A", coverageStatus: "SUCCESS", coverageStatusColor: "lightgray",
-		duplication: "N/A", duplicationStatus: "SUCCESS", duplicationStatusColor: "lightgray",
-		reliabilityStatus: "SUCCESS", reliabilityStatusColor: "brightgreen", securityStatus: "FAILED",
-		securityStatusColor: "red", maintainabilityStatus: "SUCCESS", maintainabilityStatusColor: "brightgreen"}
+	want := TemplateModel{
+		host:                       "http://localhost",
+		project:                    "Project",
+		pullRequest:                "123",
+		status:                     "FAILED",
+		statusColor:                "red",
+		coverage:                   "N/A",
+		coverageStatus:             "SUCCESS",
+		coverageStatusColor:        "lightgray",
+		duplication:                "N/A",
+		duplicationStatus:          "SUCCESS",
+		duplicationStatusColor:     "lightgray",
+		reliabilityStatus:          "SUCCESS",
+		reliabilityStatusColor:     "brightgreen",
+		securityStatus:             "FAILED",
+		securityStatusColor:        "red",
+		maintainabilityStatus:      "SUCCESS",
+		maintainabilityStatusColor: "brightgreen",
+		codeSmells:                 "0",
+		codeSmellsStatus:           "SUCCESS",
+		codeSmellsStatusColor:      "brightgreen",
+	}
 
 	got := ParseTemplateModel(qualityGate)
 	if got != want {
