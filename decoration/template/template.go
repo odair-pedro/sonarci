@@ -7,6 +7,7 @@ const ReportTemplate = "## Quality Report\n" +
 	"|-|-|\n" +
 	"| New Coverage |[![Status](https://img.shields.io/badge/${cov}-${cov-status}-${cov-status-color}?style=for-the-badge)](${host}/component_measures?id=${project}&metric=new_coverage&pullRequest=${pullrequest}&view=list)|\n" +
 	"| New Duplicated Lines Density |[![Status](https://img.shields.io/badge/${dup}-${dup-status}-${dup-status-color}?style=for-the-badge)](${host}/component_measures?id=${project}&metric=new_duplicated_lines_density&pullRequest=${pullrequest}&view=list)|\n" +
+	"| New Code Smells |[![Status](https://img.shields.io/badge/${smells}-${smells-status}-${smells-status-color}?style=for-the-badge)](${host}/project/issues?id=${project}&pullRequest=${pullrequest}&resolved=false&sinceLeakPeriod=true&types=CODE_SMELL)|\n" +
 	"| Reliability |[![Status](https://img.shields.io/badge/${rel-status}-${rel-status-color}?style=for-the-badge)](${host}/component_measures?id=${project}&metric=new_reliability_rating&pullRequest=${pullrequest}&view=list)|\n" +
 	"| Security |[![Status](https://img.shields.io/badge/${sec-status}-${sec-status-color}?style=for-the-badge)](${host}/component_measures?id=${project}&metric=new_security_rating&pullRequest=${pullrequest}&view=list)|\n" +
 	"| Maintainability |[![Status](https://img.shields.io/badge/${mtb-status}-${mtb-status-color}?style=for-the-badge)](${host}/component_measures?id=${project}&metric=new_maintainability_rating&pullRequest=${pullrequest}&view=list)|\n\n" +
