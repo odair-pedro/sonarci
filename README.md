@@ -1,4 +1,5 @@
-# Sonar CI
+<img src="https://user-images.githubusercontent.com/26411431/156559746-7bb31f3f-18c9-4b27-bd1f-c2a6ade8b295.png" width="700" height="300">
+
 A simple CLI to help you integrate Sonar inspections with CI pipelines.
 
 [![build](https://github.com/odair-pedro/sonarci/workflows/build/badge.svg)](https://github.com/odair-pedro/sonarci/actions?query=workflow%3ABuild)
