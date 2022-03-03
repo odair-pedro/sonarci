@@ -1,4 +1,5 @@
-<img src="https://user-images.githubusercontent.com/26411431/156559746-7bb31f3f-18c9-4b27-bd1f-c2a6ade8b295.png" width="700" height="300">
+
+![cover](https://user-images.githubusercontent.com/26411431/156560959-55277853-6983-49ef-a598-e8e24774edf8.png)
 
 A simple CLI to help you integrate Sonar inspections with CI pipelines.
 
