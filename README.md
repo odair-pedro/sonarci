@@ -16,9 +16,9 @@ A simple CLI to help you integrate Sonar inspections with CI pipelines.
 ## What does it do?
 Sor far, basically, SonarCI can decorate your pull requests with a quality report (and also other cool things :smiley:)
 
-Like that:
+**Like that:**
 
-## Quality Report
+### Quality Report
 
 ![Status](https://img.shields.io/badge/status-FAILED-red?style=for-the-badge)
 
@@ -31,7 +31,7 @@ Like that:
 | Security |![Status](https://img.shields.io/badge/SUCCESS-brightgreen?style=for-the-badge)|
 | Maintainability |![Status](https://img.shields.io/badge/SUCCESS-brightgreen?style=for-the-badge)|
 
-Or something simpler, if you want:
+**Or something simpler, if you want:**
 
 ![image](https://user-images.githubusercontent.com/26411431/156571196-396843ca-c3ae-4f63-813f-c91a135fed68.png)
 
