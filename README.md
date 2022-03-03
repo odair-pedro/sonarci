@@ -31,6 +31,11 @@ Like that:
 | Security |![Status](https://img.shields.io/badge/SUCCESS-brightgreen?style=for-the-badge)|
 | Maintainability |![Status](https://img.shields.io/badge/SUCCESS-brightgreen?style=for-the-badge)|
 
+Or something simpler, if you want:
+
+![image](https://user-images.githubusercontent.com/26411431/156571196-396843ca-c3ae-4f63-813f-c91a135fed68.png)
+
+
 ---
 
 ## Installation
