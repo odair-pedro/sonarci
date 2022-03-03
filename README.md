@@ -88,6 +88,8 @@ or the following command for help and usage:
 docker run odairpedro/sonarci-cli sonarci --help
 ```
 
+See more in https://hub.docker.com/repository/docker/odairpedro/sonarci-cli
+
 ---
 ## Usage
 
