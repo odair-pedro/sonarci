@@ -15,7 +15,7 @@ import (
 const (
 	flagDecorateProject      = "project"
 	flagDecorateProjectShort = "p"
-	flagDecorateProjectUsage = "SonarQube projects key"
+	flagDecorateProjectUsage = "SonarQube project key"
 )
 
 const (
