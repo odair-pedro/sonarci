@@ -1,4 +1,6 @@
-# Sonar CI
+
+![cover](https://user-images.githubusercontent.com/26411431/156560959-55277853-6983-49ef-a598-e8e24774edf8.png)
+
 A simple CLI to help you integrate Sonar inspections with CI pipelines.
 
 [![build](https://github.com/odair-pedro/sonarci/workflows/build/badge.svg)](https://github.com/odair-pedro/sonarci/actions?query=workflow%3ABuild)
@@ -14,9 +16,9 @@ A simple CLI to help you integrate Sonar inspections with CI pipelines.
 ## What does it do?
 Sor far, basically, SonarCI can decorate your pull requests with a quality report (and also other cool things :smiley:)
 
-Like that:
+**Like that:**
 
-## Quality Report
+### Quality Report
 
 ![Status](https://img.shields.io/badge/status-FAILED-red?style=for-the-badge)
 
@@ -28,6 +30,11 @@ Like that:
 | Reliability |![Status](https://img.shields.io/badge/SUCCESS-brightgreen?style=for-the-badge)|
 | Security |![Status](https://img.shields.io/badge/SUCCESS-brightgreen?style=for-the-badge)|
 | Maintainability |![Status](https://img.shields.io/badge/SUCCESS-brightgreen?style=for-the-badge)|
+
+**Or something simpler, if you want:**
+
+![image](https://user-images.githubusercontent.com/26411431/156571196-396843ca-c3ae-4f63-813f-c91a135fed68.png)
+
 
 ---
 
@@ -80,6 +87,8 @@ or the following command for help and usage:
 ```
 docker run odairpedro/sonarci-cli sonarci --help
 ```
+
+See more in https://hub.docker.com/repository/docker/odairpedro/sonarci-cli
 
 ---
 ## Usage
