@@ -79,13 +79,22 @@ Note: SonarCI will be installed on current directory
 If you prefer to use SonarCI CLI with Docker, just run the following command:
 
 ```
-docker run odairpedro/sonarci-cli sonarci [command]
+docker run odairpedro/sonarci-cli -- [command]
 ```
 
 or the following command for help and usage:
 
 ```
-docker run odairpedro/sonarci-cli sonarci --help
+docker run odairpedro/sonarci-cli -- --help
+```
+
+### Example
+```
+docker run -e SONARCI_DECORATION_TYPE="azrepos" \
+-e SONARCI_DECORATION_PROJECT="MY-ORGANIZATION/MY-TEAM-PROJECT" \
+-e SONARCI_DECORATION_REPOSITORY="my-repository-name" \
+-e SONARCI_DECORATION_TOKEN="azdevops-personal-access-token" \
+odairpedro/sonarci-cli:latest -- -s "https://mysonar.server.com" -o "sonar-token" decorate -r 999 -p "sonar-project-key"
 ```
 
 See more in https://hub.docker.com/repository/docker/odairpedro/sonarci-cli
