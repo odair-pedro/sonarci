@@ -1,8 +1,12 @@
-package template
+package resources
 
-const ReportTemplate = "## Quality Report\n" +
-	"---\n" +
-	"[![Status](https://img.shields.io/badge/status-${status}-${status-color}?style=for-the-badge)](${host}/dashboard?id=${project}&pullRequest=${pullrequest})\n\n" +
+const QualityReportTemplateTitle = "## Quality Report\n" +
+	"---\n"
+
+const QualityReportTemplateTitleWithTag = "## Quality Report [${tag}]\n" +
+	"---\n"
+
+const QualityReportTemplate = "[![Status](https://img.shields.io/badge/status-${status}-${status-color}?style=for-the-badge)](${host}/dashboard?id=${project}&pullRequest=${pullrequest})\n\n" +
 	"| Metric | Rating |\n" +
 	"|-|-|\n" +
 	"| New Coverage |[![Status](https://img.shields.io/badge/${cov}-${cov-status}-${cov-status-color}?style=for-the-badge)](${host}/component_measures?id=${project}&metric=new_coverage&pullRequest=${pullrequest}&view=list)|\n" +

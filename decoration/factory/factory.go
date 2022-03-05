@@ -5,11 +5,11 @@ import (
 	"sonarci/connection"
 	"sonarci/decoration"
 	"sonarci/decoration/azuredevops"
-	"sonarci/decoration/template"
+	"sonarci/decoration/template/engine"
 )
 
 func CreatePullRequestDecorator(decoratorType string, project string, repository string,
-	engine template.Engine, connectionFactory func(server string) connection.Connection) (decoration.PullRequestDecorator, error) {
+	engine engine.Engine, connectionFactory func(server string) connection.Connection) (decoration.PullRequestDecorator, error) {
 
 	switch decoratorType {
 	case typeAzRepos:
@@ -26,7 +26,6 @@ const (
 	typeGitHub  = "github"
 )
 
-func createPullRequestAzureDecorator(project string, repository string, engine template.Engine,
-	connectionFactory func(server string) connection.Connection) *azuredevops.PullRequestDecorator {
+func createPullRequestAzureDecorator(project string, repository string, engine engine.Engine, connectionFactory func(server string) connection.Connection) *azuredevops.PullRequestDecorator {
 	return azuredevops.NewPullRequestDecorator(connectionFactory(azuredevops.Server), engine, project, repository)
 }

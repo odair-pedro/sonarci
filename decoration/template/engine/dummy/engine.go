@@ -4,6 +4,7 @@ import (
 	"errors"
 	"reflect"
 	"regexp"
+	"sonarci/decoration/template/engine/dummy/resources"
 )
 
 type Engine struct {
@@ -11,6 +12,14 @@ type Engine struct {
 
 func NewEngine() *Engine {
 	return &Engine{}
+}
+
+func (eng *Engine) GetQualityReportTemplate(a ...interface{}) string {
+	if len(a) > 0 && a[0] == true {
+		return resources.QualityReportTemplateTitleWithTag + resources.QualityReportTemplate
+	}
+
+	return resources.QualityReportTemplateTitle + resources.QualityReportTemplate
 }
 
 func (eng *Engine) ProcessTemplate(template string, dataSource interface{}) (string, error) {

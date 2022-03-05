@@ -1,7 +1,12 @@
 package mocks
 
 type MockEngine struct {
-	ProcessTemplateMock func(template string, dataSource interface{}) (string, error)
+	GetQualityReportTemplateMock func(a ...interface{}) string
+	ProcessTemplateMock          func(template string, dataSource interface{}) (string, error)
+}
+
+func (engine *MockEngine) GetQualityReportTemplate(a ...interface{}) string {
+	return engine.GetQualityReportTemplateMock(a)
 }
 
 func (engine *MockEngine) ProcessTemplate(template string, dataSource interface{}) (string, error) {

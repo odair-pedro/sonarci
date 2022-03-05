@@ -4,5 +4,5 @@ import "sonarci/sonar"
 
 type PullRequestDecorator interface {
 	ClearPreviousComments(pullRequest string) error
-	CommentQualityGate(qualityGate sonar.QualityGate) error
+	CommentQualityGate(qualityGate sonar.QualityGate, tag string) error
 }
