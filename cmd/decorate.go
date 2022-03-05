@@ -7,7 +7,7 @@ import (
 	"sonarci/connection"
 	"sonarci/connection/http"
 	decorationFactory "sonarci/decoration/factory"
-	templateFactory "sonarci/decoration/template/factory"
+	templateEngineFactory "sonarci/decoration/template/engine/factory"
 	"sonarci/sonar"
 	"time"
 )
@@ -24,6 +24,11 @@ const (
 	flagDecoratePullRequestUsage = "Pull request ID"
 )
 
+const (
+	flagDecorateTag      = "tag"
+	flagDecorateTagUsage = "Tag to identify decoration comment on pull request"
+)
+
 func NewDecorateCmd() *cobra.Command {
 	decorateCmd := &cobra.Command{
 		Use:   "decorate",
@@ -37,6 +42,8 @@ func NewDecorateCmd() *cobra.Command {
 
 	decorateCmd.Flags().StringP(flagDecoratePullRequest, flagDecoratePullRequestShort, "", flagDecoratePullRequestUsage)
 	_ = decorateCmd.MarkFlagRequired(flagDecoratePullRequest)
+
+	decorateCmd.Flags().String(flagDecorateTag, "", flagDecorateTagUsage)
 
 	return decorateCmd
 }
@@ -52,6 +59,8 @@ func decorate(cmd *cobra.Command, _ []string) {
 		return
 	}
 
+	tag, _ := cmd.Flags().GetString(flagDecorateTag)
+
 	pFlags := getPersistentFlagsFromCmd(cmd)
 	if pFlags == nil {
 		return
@@ -63,11 +72,11 @@ func decorate(cmd *cobra.Command, _ []string) {
 		log.Fatal(err)
 	}
 
-	decoratePullRequest(qualityGate, pFlags.Timeout)
+	decoratePullRequest(qualityGate, tag, pFlags.Timeout)
 	checkQualityGate(qualityGate)
 }
 
-func decoratePullRequest(qualityGate sonar.QualityGate, timeout time.Duration) {
+func decoratePullRequest(qualityGate sonar.QualityGate, tag string, timeout time.Duration) {
 	const (
 		decoratorTypeEnv = "SONARCI_DECORATION_TYPE"
 		projectEnv       = "SONARCI_DECORATION_PROJECT"
@@ -99,7 +108,7 @@ func decoratePullRequest(qualityGate sonar.QualityGate, timeout time.Duration) {
 		return
 	}
 
-	engine := templateFactory.CreateDummyTemplateEngine()
+	engine := templateEngineFactory.CreateDummyTemplateEngine()
 	decorator, err := decorationFactory.CreatePullRequestDecorator(decoratorType, project, repository, engine,
 		func(server string) connection.Connection {
 			return http.NewConnection(server, token, timeout)
@@ -114,7 +123,7 @@ func decoratePullRequest(qualityGate sonar.QualityGate, timeout time.Duration) {
 		log.Printf("Failue at remove old comments from pull request (%s): %s", qualityGate.Source, err.Error())
 	}
 
-	err = decorator.CommentQualityGate(qualityGate)
+	err = decorator.CommentQualityGate(qualityGate, tag)
 	if err != nil {
 		log.Printf("Failure on pull request decoration: %s", err.Error())
 	}

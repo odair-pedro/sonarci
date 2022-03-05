@@ -1,6 +1,41 @@
 package dummy
 
-import "testing"
+import (
+	"sonarci/decoration/template/engine/dummy/resources"
+	"testing"
+)
+
+func Test_dummyEngine_GetQualityReportTemplate_CheckReportTitleWithTag(t *testing.T) {
+	eng := NewEngine()
+
+	want := resources.QualityReportTemplateTitleWithTag + resources.QualityReportTemplate
+	got := eng.GetQualityReportTemplate(true)
+
+	if got != want {
+		t.Fail()
+	}
+}
+
+func Test_dummyEngine_GetQualityReportTemplate_CheckReportTitleWithoutTag(t *testing.T) {
+	eng := NewEngine()
+
+	want := resources.QualityReportTemplateTitle + resources.QualityReportTemplate
+
+	got := eng.GetQualityReportTemplate()
+	if got != want {
+		t.Fail()
+	}
+
+	got = eng.GetQualityReportTemplate(false)
+	if got != want {
+		t.Fail()
+	}
+
+	got = eng.GetQualityReportTemplate("anything")
+	if got != want {
+		t.Fail()
+	}
+}
 
 func Test_dummyEngine_ProcessTemplate(t *testing.T) {
 	eng := NewEngine()

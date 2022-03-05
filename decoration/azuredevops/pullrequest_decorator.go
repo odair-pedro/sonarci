@@ -3,18 +3,18 @@ package azuredevops
 import (
 	"net/url"
 	"sonarci/connection"
-	"sonarci/decoration/template"
+	"sonarci/decoration/template/engine"
 	"strings"
 )
 
 type PullRequestDecorator struct {
 	connection.Connection
-	template.Engine
+	engine.Engine
 	Project    string
 	Repository string
 }
 
-func NewPullRequestDecorator(connection connection.Connection, engine template.Engine, project string, repository string) *PullRequestDecorator {
+func NewPullRequestDecorator(connection connection.Connection, engine engine.Engine, project string, repository string) *PullRequestDecorator {
 	return &PullRequestDecorator{connection, engine, project, repository}
 }
 

@@ -88,7 +88,7 @@ func Test_ParseTemplateModel_Ok_WithCoverage(t *testing.T) {
 		codeSmellsStatusColor:      "brightgreen",
 	}
 
-	got := ParseTemplateModel(qualityGate)
+	got := ParseTemplateModel(qualityGate, "")
 	if got != want {
 		t.Errorf("parseTemplateModel() returned unexpected value")
 	}
@@ -128,7 +128,7 @@ func Test_ParseTemplateModel_Error_WithCoverage(t *testing.T) {
 		codeSmellsStatusColor:      "brightgreen",
 	}
 
-	got := ParseTemplateModel(qualityGate)
+	got := ParseTemplateModel(qualityGate, "")
 	if got != want {
 		t.Errorf("parseTemplateModel() returned unexpected value")
 	}
@@ -167,7 +167,7 @@ func Test_ParseTemplateModel_Ok_WithoutCoverage(t *testing.T) {
 		codeSmellsStatusColor:      "brightgreen",
 	}
 
-	got := ParseTemplateModel(qualityGate)
+	got := ParseTemplateModel(qualityGate, "")
 	if got != want {
 		t.Errorf("parseTemplateModel() returned unexpected value")
 	}
@@ -206,7 +206,7 @@ func Test_ParseTemplateModel_Error_WithoutCoverage(t *testing.T) {
 		codeSmellsStatusColor:      "brightgreen",
 	}
 
-	got := ParseTemplateModel(qualityGate)
+	got := ParseTemplateModel(qualityGate, "")
 	if got != want {
 		t.Errorf("parseTemplateModel() returned unexpected value")
 	}
@@ -245,7 +245,7 @@ func Test_ParseTemplateModel_Ok_WithoutDuplication(t *testing.T) {
 		codeSmellsStatusColor:      "brightgreen",
 	}
 
-	got := ParseTemplateModel(qualityGate)
+	got := ParseTemplateModel(qualityGate, "")
 	if got != want {
 		t.Errorf("parseTemplateModel() returned unexpected value")
 	}
@@ -285,7 +285,7 @@ func Test_ParseTemplateModel_Error_WithoutDuplication(t *testing.T) {
 		codeSmellsStatusColor:      "brightgreen",
 	}
 
-	got := ParseTemplateModel(qualityGate)
+	got := ParseTemplateModel(qualityGate, "")
 	if got != want {
 		t.Errorf("parseTemplateModel() returned unexpected value")
 	}

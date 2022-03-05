@@ -36,9 +36,10 @@ type TemplateModel struct {
 	codeSmells                 string `dummy:"smells"`
 	codeSmellsStatus           string `dummy:"smells-status"`
 	codeSmellsStatusColor      string `dummy:"smells-status-color"`
+	tag                        string `dummy:"tag"`
 }
 
-func ParseTemplateModel(qualityGate sonar.QualityGate) TemplateModel {
+func ParseTemplateModel(qualityGate sonar.QualityGate, tag string) TemplateModel {
 	cov := qualityGate.Conditions[_keyNewCoverage]
 	dup := qualityGate.Conditions[_keyNewDuplicatedLinesDensity]
 	rel := qualityGate.Conditions[_keyNewReliabilityRating]
@@ -67,6 +68,7 @@ func ParseTemplateModel(qualityGate sonar.QualityGate) TemplateModel {
 		codeSmells:                 strconv.FormatFloat(float64(smells.Value), 'f', 0, 32),
 		codeSmellsStatus:           _convertStatus(smells.Status),
 		codeSmellsStatusColor:      _convertStatusColor(smells.Status),
+		tag:                        tag,
 	}
 
 	model = _checkCoverageData(model)

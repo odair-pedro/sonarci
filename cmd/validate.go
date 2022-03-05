@@ -13,9 +13,9 @@ const (
 )
 
 const (
-	flagDecorate      = "decorate"
-	flagDecorateShort = "d"
-	flagDecorateUsage = "Decorate a pull request with quality gate results"
+	flagValidateAndDecorate      = "decorate"
+	flagValidateAndDecorateShort = "d"
+	flagValidateAndDecorateUsage = "Decorate a pull request with quality gate results"
 )
 
 func NewValidateCmd() *cobra.Command {
@@ -56,8 +56,10 @@ func newPullRequestCmd() *cobra.Command {
 	}
 
 	pullRequestCmd.Flags().StringP(flagValidateProject, flagValidateProjectShort, "", flagValidateProjectUsage)
-	pullRequestCmd.Flags().BoolP(flagDecorate, flagDecorateShort, false, flagDecorateUsage)
+	pullRequestCmd.Flags().BoolP(flagValidateAndDecorate, flagValidateAndDecorateShort, false, flagValidateAndDecorateUsage)
 	_ = pullRequestCmd.MarkFlagRequired(flagValidateProject)
+
+	pullRequestCmd.Flags().String(flagDecorateTag, "", flagDecorateTagUsage)
 
 	return pullRequestCmd
 }
@@ -95,6 +97,8 @@ func validatePullRequest(cmd *cobra.Command, args []string) {
 		return
 	}
 
+	tag, _ := cmd.Flags().GetString(flagDecorateTag)
+
 	pFlags := getPersistentFlagsFromCmd(cmd)
 	if pFlags == nil {
 		return
@@ -107,9 +111,9 @@ func validatePullRequest(cmd *cobra.Command, args []string) {
 		log.Fatal(err)
 	}
 
-	decorate, _ := cmd.Flags().GetBool(flagDecorate)
+	decorate, _ := cmd.Flags().GetBool(flagValidateAndDecorate)
 	if decorate {
-		decoratePullRequest(qualityGate, pFlags.Timeout)
+		decoratePullRequest(qualityGate, tag, pFlags.Timeout)
 	}
 
 	if !checkQualityGate(qualityGate) {

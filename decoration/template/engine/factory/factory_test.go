@@ -1,7 +1,7 @@
 package factory
 
 import (
-	"sonarci/decoration/template/dummy"
+	"sonarci/decoration/template/engine/dummy"
 	"testing"
 )
 
