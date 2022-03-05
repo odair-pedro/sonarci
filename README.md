@@ -97,7 +97,7 @@ docker run -e SONARCI_DECORATION_TYPE="azrepos" \
 odairpedro/sonarci-cli:latest -- -s "https://mysonar.server.com" -o "sonar-token" decorate -r 999 -p "sonar-project-key"
 ```
 
-See more in https://hub.docker.com/repository/docker/odairpedro/sonarci-cli
+See more here: https://hub.docker.com/repository/docker/odairpedro/sonarci-cli
 
 ---
 ## Usage
