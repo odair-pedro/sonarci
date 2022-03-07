@@ -18,7 +18,7 @@ func (decorator *PullRequestDecorator) CommentQualityGate(qualityGate sonar.Qual
 		return err
 	}
 
-	commentModel := models.ParseCommentModel(qualityGate, report)
+	commentModel := models.ParseCommentModel(qualityGate, report, tag)
 	body, _ := json.Marshal(commentModel)
 
 	endpoint := fmt.Sprintf(routeCommentPullRequest, formatPath(decorator.Project), formatPath(decorator.Repository), qualityGate.Source)

@@ -16,7 +16,8 @@ type CommentWrapperModel struct {
 }
 
 type CommentPropertyModel struct {
-	GeneratedBySonarCI bool
+	GeneratedBySonarCI bool   `json:"generatedBySonarCi"`
+	Tag                string `json:"tag"`
 }
 
 type CommentModel struct {
@@ -24,7 +25,7 @@ type CommentModel struct {
 	CommentType string `json:"commentType"`
 }
 
-func ParseCommentModel(qualityGate sonar.QualityGate, report string) CommentWrapperModel {
+func ParseCommentModel(qualityGate sonar.QualityGate, report string, tag string) CommentWrapperModel {
 	var status string
 	if qualityGate.HasPassed() {
 		status = statusClosed
@@ -34,7 +35,7 @@ func ParseCommentModel(qualityGate sonar.QualityGate, report string) CommentWrap
 
 	return CommentWrapperModel{
 		Status:     status,
-		Properties: CommentPropertyModel{GeneratedBySonarCI: true},
+		Properties: CommentPropertyModel{GeneratedBySonarCI: true, Tag: tag},
 		Comments: []CommentModel{
 			{CommentType: commentType, Content: report},
 		}}

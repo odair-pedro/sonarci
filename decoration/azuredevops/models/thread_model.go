@@ -19,6 +19,7 @@ type ThreadCommentModel struct {
 
 type ThreadPropertyModel struct {
 	GeneratedBySonarCI ThreadPropertySonarCIModel `json:"generatedBySonarCI"`
+	Tag                ThreadPropertySonarCIModel `json:"tag"`
 }
 
 type ThreadPropertySonarCIModel struct {

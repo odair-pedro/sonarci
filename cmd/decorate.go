@@ -118,7 +118,7 @@ func decoratePullRequest(qualityGate sonar.QualityGate, tag string, timeout time
 		return
 	}
 
-	err = decorator.ClearPreviousComments(qualityGate.Source)
+	err = decorator.ClearPreviousComments(qualityGate.Source, tag)
 	if err != nil {
 		log.Printf("Failue at remove old comments from pull request (%s): %s", qualityGate.Source, err.Error())
 	}

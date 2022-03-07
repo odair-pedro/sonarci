@@ -10,8 +10,8 @@ import (
 const routeListPullRequestThreadsComments = "%s/_apis/git/repositories/%s/pullRequests/%s/threads?api-version=6.0"
 const routeDeletePullRequestThreadComment = "%s/_apis/git/repositories/%s/pullRequests/%s/threads/%d/comments/%d?api-version=6.0"
 
-func (decorator *PullRequestDecorator) ClearPreviousComments(pullRequest string) error {
-	comments, err := decorator._loadMyPullRequestThreadsComments(pullRequest)
+func (decorator *PullRequestDecorator) ClearPreviousComments(pullRequest string, tag string) error {
+	comments, err := decorator._loadMyPullRequestThreadsComments(pullRequest, tag)
 	if err != nil {
 		return err
 	}
@@ -32,7 +32,7 @@ func (decorator *PullRequestDecorator) ClearPreviousComments(pullRequest string)
 	return nil
 }
 
-func (decorator *PullRequestDecorator) _loadMyPullRequestThreadsComments(pullRequest string) ([]_commentToDelete, error) {
+func (decorator *PullRequestDecorator) _loadMyPullRequestThreadsComments(pullRequest string, tag string) ([]_commentToDelete, error) {
 	chBuff, chErr := decorator.Get(fmt.Sprintf(routeListPullRequestThreadsComments, formatPath(decorator.Project),
 		formatPath(decorator.Repository), pullRequest))
 	err := <-chErr
@@ -49,7 +49,9 @@ func (decorator *PullRequestDecorator) _loadMyPullRequestThreadsComments(pullReq
 
 	var commentsToDelete []_commentToDelete
 	for _, thread := range threadsWrapper.Value {
-		if !thread.IsDeleted && strings.ToLower(thread.Properties.GeneratedBySonarCI.Value) == "true" {
+		if !thread.IsDeleted &&
+			strings.ToLower(thread.Properties.GeneratedBySonarCI.Value) == "true" &&
+			thread.Properties.Tag.Value == tag {
 			for _, comment := range thread.Comments {
 				if !comment.IsDeleted {
 					commentsToDelete = append(commentsToDelete,

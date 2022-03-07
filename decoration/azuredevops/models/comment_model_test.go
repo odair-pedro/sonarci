@@ -20,7 +20,7 @@ func Test_ParseCommentModel_CheckStatus(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := ParseCommentModel(tt.args.qualityGate, tt.args.report); got.Status != tt.wantStatus {
+			if got := ParseCommentModel(tt.args.qualityGate, tt.args.report, "any-tag"); got.Status != tt.wantStatus {
 				t.Errorf("parseCommentModel() Status = %v, want %v", got.Status, tt.wantStatus)
 			}
 		})
@@ -28,7 +28,7 @@ func Test_ParseCommentModel_CheckStatus(t *testing.T) {
 }
 
 func Test_ParseCommentModel_CheckPropertiesGeneratedBySonarCI_IsTrue(t *testing.T) {
-	got := ParseCommentModel(sonar.QualityGate{Status: "anything"}, "report-test").Properties.GeneratedBySonarCI
+	got := ParseCommentModel(sonar.QualityGate{Status: "anything"}, "report-test", "any-tag").Properties.GeneratedBySonarCI
 	if got != true {
 		t.Errorf("parseCommentModel() Properties.GeneratedBySonarCI want true")
 	}
