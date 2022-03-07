@@ -23,7 +23,7 @@ func TestPullRequestDecorator_ClearPreviousComments_CheckErrorOnLoadComments(t *
 	}
 
 	decorator := NewPullRequestDecorator(mockConn, &mocks.MockEngine{}, "project-test", "repo-test")
-	gotError := decorator.ClearPreviousComments("pullrequest-test")
+	gotError := decorator.ClearPreviousComments("pullrequest-test", "")
 
 	if gotError != wantError {
 		t.Fail()
@@ -62,7 +62,7 @@ func TestPullRequestDecorator_ClearPreviousComments_CheckErrorOnDeleteComments(t
 	}
 
 	decorator := NewPullRequestDecorator(mockConn, &mocks.MockEngine{}, "project-test", "repo-test")
-	gotError := decorator.ClearPreviousComments("pullrequest-test")
+	gotError := decorator.ClearPreviousComments("pullrequest-test", "")
 
 	if gotError != wantError {
 		t.Fail()
@@ -98,7 +98,7 @@ func TestPullRequestDecorator_ClearPreviousComments_CheckNoError(t *testing.T) {
 	}
 
 	decorator := NewPullRequestDecorator(mockConn, &mocks.MockEngine{}, "project-test", "repo-test")
-	gotError := decorator.ClearPreviousComments("pullrequest-test")
+	gotError := decorator.ClearPreviousComments("pullrequest-test", "")
 
 	if gotError != nil {
 		t.Fail()
@@ -119,7 +119,7 @@ func TestPullRequestDecorator_loadMyPullRequestThreadsComments_CheckErrorOnReque
 	}
 
 	decorator := NewPullRequestDecorator(mockConn, &mocks.MockEngine{}, "project-test", "repo-test")
-	_, gotErr := decorator._loadMyPullRequestThreadsComments("anything")
+	_, gotErr := decorator._loadMyPullRequestThreadsComments("anything", "")
 
 	if gotErr != wantError {
 		t.FailNow()
@@ -140,7 +140,7 @@ func TestPullRequestDecorator_loadMyPullRequestThreadsComments_CheckErrorOnReadR
 	}
 
 	decorator := NewPullRequestDecorator(mockConn, &mocks.MockEngine{}, "project-test", "repo-test")
-	_, gotErr := decorator._loadMyPullRequestThreadsComments("anything")
+	_, gotErr := decorator._loadMyPullRequestThreadsComments("anything", "")
 
 	if gotErr == nil {
 		t.FailNow()
@@ -156,7 +156,10 @@ func TestPullRequestDecorator_loadMyPullRequestThreadsComments_CheckResult(t *te
 					{Id: 11, IsDeleted: true},
 					{Id: 12, IsDeleted: false},
 				},
-				Properties: models.ThreadPropertyModel{GeneratedBySonarCI: models.ThreadPropertySonarCIModel{Value: "True"}},
+				Properties: models.ThreadPropertyModel{
+					GeneratedBySonarCI: models.ThreadPropertySonarCIModel{Value: "True"},
+					Tag:                models.ThreadPropertySonarCIModel{Value: "123"},
+				},
 			},
 			{Id: 2, IsDeleted: true,
 				Comments: []models.ThreadCommentModel{
@@ -164,28 +167,50 @@ func TestPullRequestDecorator_loadMyPullRequestThreadsComments_CheckResult(t *te
 					{Id: 21, IsDeleted: false},
 					{Id: 22, IsDeleted: false},
 				},
-				Properties: models.ThreadPropertyModel{GeneratedBySonarCI: models.ThreadPropertySonarCIModel{Value: "True"}},
+				Properties: models.ThreadPropertyModel{
+					GeneratedBySonarCI: models.ThreadPropertySonarCIModel{Value: "True"},
+					Tag:                models.ThreadPropertySonarCIModel{Value: "123"},
+				},
 			},
 			{Id: 3, IsDeleted: false,
 				Comments: []models.ThreadCommentModel{
 					{Id: 31, IsDeleted: false},
 					{Id: 32, IsDeleted: false},
 				},
-				Properties: models.ThreadPropertyModel{GeneratedBySonarCI: models.ThreadPropertySonarCIModel{Value: "true"}},
+				Properties: models.ThreadPropertyModel{
+					GeneratedBySonarCI: models.ThreadPropertySonarCIModel{Value: "true"},
+					Tag:                models.ThreadPropertySonarCIModel{Value: "123"},
+				},
 			},
 			{Id: 4, IsDeleted: false,
 				Comments: []models.ThreadCommentModel{
 					{Id: 41, IsDeleted: false},
 					{Id: 42, IsDeleted: false},
 				},
-				Properties: models.ThreadPropertyModel{GeneratedBySonarCI: models.ThreadPropertySonarCIModel{Value: "false"}},
+				Properties: models.ThreadPropertyModel{
+					GeneratedBySonarCI: models.ThreadPropertySonarCIModel{Value: "false"},
+					Tag:                models.ThreadPropertySonarCIModel{Value: "123"},
+				},
 			},
 			{Id: 5, IsDeleted: false,
 				Comments: []models.ThreadCommentModel{
 					{Id: 51, IsDeleted: false},
 					{Id: 52, IsDeleted: false},
 				},
-				Properties: models.ThreadPropertyModel{GeneratedBySonarCI: models.ThreadPropertySonarCIModel{Value: "anything"}},
+				Properties: models.ThreadPropertyModel{
+					GeneratedBySonarCI: models.ThreadPropertySonarCIModel{Value: "false"},
+					Tag:                models.ThreadPropertySonarCIModel{Value: "123"},
+				},
+			},
+			{Id: 6, IsDeleted: false,
+				Comments: []models.ThreadCommentModel{
+					{Id: 61, IsDeleted: false},
+					{Id: 62, IsDeleted: false},
+				},
+				Properties: models.ThreadPropertyModel{
+					GeneratedBySonarCI: models.ThreadPropertySonarCIModel{Value: "true"},
+					Tag:                models.ThreadPropertySonarCIModel{Value: "999"},
+				},
 			},
 		},
 	}
@@ -212,7 +237,7 @@ func TestPullRequestDecorator_loadMyPullRequestThreadsComments_CheckResult(t *te
 	}
 
 	decorator := NewPullRequestDecorator(mockConn, &mocks.MockEngine{}, "project-test", "repo-test")
-	gotThreads, err := decorator._loadMyPullRequestThreadsComments(pullRequest)
+	gotThreads, err := decorator._loadMyPullRequestThreadsComments(pullRequest, "123")
 
 	if err != nil {
 		t.Fail()
