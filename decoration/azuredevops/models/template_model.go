@@ -21,10 +21,10 @@ type TemplateModel struct {
 	pullRequest                string `dummy:"pullrequest"`
 	status                     string `dummy:"status"`
 	statusColor                string `dummy:"status-color"`
-	coverage                   string `dummy:"cov"`
+	coverage                   string `dummy:"cov" escape:"true"`
 	coverageStatus             string `dummy:"cov-status"`
 	coverageStatusColor        string `dummy:"cov-status-color"`
-	duplication                string `dummy:"dup"`
+	duplication                string `dummy:"dup" escape:"true"`
 	duplicationStatus          string `dummy:"dup-status"`
 	duplicationStatusColor     string `dummy:"dup-status-color"`
 	reliabilityStatus          string `dummy:"rel-status"`
