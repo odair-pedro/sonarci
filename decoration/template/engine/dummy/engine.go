@@ -6,6 +6,7 @@ import (
 	"reflect"
 	"regexp"
 	"sonarci/decoration/template/engine/dummy/resources"
+	"strconv"
 )
 
 type Engine struct {
@@ -42,15 +43,24 @@ func (eng *Engine) processDataSource(template string, dataSource interface{}) (s
 
 	t := reflect.TypeOf(dataSource)
 	for i := 0; i < v.NumField(); i++ {
-		template = processDataSourceField(t.Field(i).Tag.Get("dummy"), v.Field(i).String(), template)
+		name := t.Field(i).Tag.Get("dummy")
+		escape, err := strconv.ParseBool(t.Field(i).Tag.Get("escape"))
+		if err != nil {
+			escape = false
+		}
+		template = processDataSourceField(name, v.Field(i).String(), template, escape)
 	}
 	return template, nil
 }
 
-func processDataSourceField(name string, value string, template string) string {
+func processDataSourceField(name string, value string, template string, escape bool) string {
 	reg := regexp.MustCompile(`\$\{` + name + `\}`)
-	escapedValue := escapeValue(value)
-	return reg.ReplaceAllString(template, escapedValue)
+
+	if escape {
+		value = escapeValue(value)
+	}
+
+	return reg.ReplaceAllString(template, value)
 }
 
 func escapeValue(value string) string {
