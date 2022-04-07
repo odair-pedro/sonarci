@@ -2,6 +2,7 @@ package dummy
 
 import (
 	"errors"
+	"net/url"
 	"reflect"
 	"regexp"
 	"sonarci/decoration/template/engine/dummy/resources"
@@ -48,5 +49,10 @@ func (eng *Engine) processDataSource(template string, dataSource interface{}) (s
 
 func processDataSourceField(name string, value string, template string) string {
 	reg := regexp.MustCompile(`\$\{` + name + `\}`)
-	return reg.ReplaceAllString(template, value)
+	escapedValue := escapeValue(value)
+	return reg.ReplaceAllString(template, escapedValue)
+}
+
+func escapeValue(value string) string {
+	return url.PathEscape(value)
 }

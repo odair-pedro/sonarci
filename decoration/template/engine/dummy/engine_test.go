@@ -109,3 +109,21 @@ func Test_dummyEngine_ProcessTemplate_WithInvalidDataSource_ShouldNotReturnValue
 		t.Errorf("Should return nil but empty \"%s\"", got)
 	}
 }
+
+func Test_processDataSourceField_ShouldReturnExpectedValue(t *testing.T) {
+	got := processDataSourceField("test", "testing-message", "Testing message: \"${test}\"")
+	want := "Testing message: \"testing-message\""
+
+	if got != want {
+		t.Errorf("Should process right value. Got \"%s\" but want \"%s\"", got, want)
+	}
+}
+
+func Test_escapeValue_ShouldEscabeCharacters(t *testing.T) {
+	got := escapeValue("98.0%")
+	want := "98.0%25"
+
+	if got != want {
+		t.Errorf("Should escape special characters. Got \"%s\" but want \"%s\"", got, want)
+	}
+}
