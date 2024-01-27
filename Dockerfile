@@ -1,4 +1,4 @@
-FROM alpine:3.12
+FROM alpine:3.18.6
 
 RUN wget https://github.com/odair-pedro/sonarci/releases/latest/download/sonarci-linux-x64.tar.gz &&\
 tar -xf sonarci-linux-x64.tar.gz sonarci &&\
